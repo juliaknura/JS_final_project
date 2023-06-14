@@ -6,7 +6,6 @@ from program.selecter import by_ddl, by_category, by_checked_off_date, by_exec_d
     get_category_name, get_category_list, get_category_id, unchecked_tasks
 from sqlalchemy import create_engine
 from datetime import datetime, timedelta
-import json
 from program.db_tables import db_name
 from program.Task import Task
 
@@ -15,7 +14,8 @@ class Tasker:
     """This class handles adding, loading and editing tasks"""
 
     def __init__(self): # TODO powinien dostać priority_dict i daily_list_priority_lvl
-        self.current_task_list = self.get_today_list()
+        self.current_task_list = None
+        self.get_today_list()
         self.engine = create_engine(db_name, echo=True)
         # TODO na razie niech bedzie verbose zeby ogladac co sie dzieje, potem to zmienimy
         p_dict, l_opt, d_list_p_lvl = self.load_settings()
@@ -43,7 +43,7 @@ class Tasker:
             task_list.append(self._from_task_tuple_to_task(task_tuple))
 
         task_list = sorted(task_list)
-        return task_list
+        self.current_task_list = task_list
 
     def get_today_list(self):
         priority_lvl_window = self.priority_dict[self.daily_list_priority_lvl]
@@ -59,7 +59,7 @@ class Tasker:
             task_list.append(self._from_task_tuple_to_task(task_tuple))
 
         task_list = sorted(task_list)
-        return task_list
+        self.current_task_list = task_list
 
     def get_by_checked_off_date(self, checked_off_date: datetime):
         task_tuple_list = by_checked_off_date(checked_off_date, self.engine)
@@ -67,7 +67,7 @@ class Tasker:
         for task_tuple in task_tuple_list:
             task_list.append(self._from_task_tuple_to_task(task_tuple))
         task_list = sorted(task_list)
-        return task_list
+        self.current_task_list = task_list
 
     def get_all_unchecked(self):
         task_tuple_list = unchecked_tasks(self.engine)
@@ -75,7 +75,7 @@ class Tasker:
         for task_tuple in task_tuple_list:
             task_list.append(self._from_task_tuple_to_task(task_tuple))
         task_list = sorted(task_list)
-        return task_list
+        self.current_task_list = task_list
 
     def category_list(self):
         category_tuple_list = get_category_list(self.engine)
