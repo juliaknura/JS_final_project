@@ -1,8 +1,10 @@
-from program.selecter import by_ddl, by_category, by_checked_off_date, by_exec_date
+from program.selecter import by_ddl, by_category, by_checked_off_date, by_exec_date, \
+    get_category_name, get_category_list, get_category_id, unchecked_tasks
 from sqlalchemy import create_engine
-from datetime import datetime
+from datetime import datetime, timedelta
 import json
 from program.db_tables import db_name
+from program.Task import Task
 
 
 class Tasker:
@@ -20,20 +22,64 @@ class Tasker:
         self.language_option = l_opt
         self.daily_list_priority_lvl = d_list_p_lvl
 
-    def get_by_category(self, cat_id):
+    def _from_task_tuple_to_task(self, task_tuple):
+        task_id, name, cat_id, task_desc, exec_date, deadline, is_checked, checked_off_date = task_tuple
+        cat_name = get_category_name(cat_id, self.engine)
+        priority = self._calculate_priority(deadline)
+        return Task(task_id=task_id, name=name, cat=cat_name, desc=task_desc, exec_date=exec_date,
+                    deadline=deadline, is_checked=is_checked, checked_off_date=checked_off_date,
+                    priority=priority)
+
+    def get_by_category(self, cat_name):
+        cat_id = get_category_id(cat_name, self.engine)[0]
         task_tuple_list = by_category(cat_id, self.engine)
-        # TODO - find out the format of the output of the selecting function, then proceed
         task_list = []
+        for task_tuple in task_tuple_list:
+            task_list.append(self._from_task_tuple_to_task(task_tuple))
+
+        task_list = sorted(task_list)
         return task_list
 
     def get_today_list(self):
-        task_tuple_list = ...
+        priority_lvl_window = self.priority_dict[self.daily_list_priority_lvl]
+        today_date = datetime.now().replace(hour=0, minute=0, second=0, microsecond=0)
+        expected_deadline_date = today_date + timedelta(priority_lvl_window)
+        task_tuple_list_ddl = by_ddl(expected_deadline_date, self.engine)
+        task_tuple_list_exec = by_exec_date(today_date, self.engine)
         task_list = []
+
+        for task_tuple in task_tuple_list_ddl:
+            task_list.append(self._from_task_tuple_to_task(task_tuple))
+        for task_tuple in task_tuple_list_exec:
+            task_list.append(self._from_task_tuple_to_task(task_tuple))
+
+        task_list = sorted(task_list)
         return task_list
 
     def get_by_checked_off_date(self, checked_off_date: datetime):
+        task_tuple_list = by_checked_off_date(checked_off_date, self.engine)
         task_list = []
+        for task_tuple in task_tuple_list:
+            task_list.append(self._from_task_tuple_to_task(task_tuple))
+        task_list = sorted(task_list)
         return task_list
+
+    def get_all_unchecked(self):
+        task_tuple_list = unchecked_tasks(self.engine)
+        task_list = []
+        for task_tuple in task_tuple_list:
+            task_list.append(self._from_task_tuple_to_task(task_tuple))
+        task_list = sorted(task_list)
+        return task_list
+
+    def category_list(self):
+        category_tuple_list = get_category_list(self.engine)
+        cat_list = []
+        for cat_tuple in category_tuple_list:
+            cat_id, cat_name = cat_tuple
+            cat_list.append(cat_name)
+        return cat_list
+
 
     def load_settings(self):
         """Loads saved settings"""
@@ -87,4 +133,3 @@ class Tasker:
             return 1
         elif days_diff <= far_bar:
             return 2
-
