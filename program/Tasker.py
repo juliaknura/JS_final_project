@@ -2,9 +2,7 @@ from program.selecter import by_ddl, by_category, by_checked_off_date, by_exec_d
 from sqlalchemy import create_engine
 from datetime import datetime
 import json
-
-# TODO uzupelnic nazwe databazy - i tak bedzie jedna nasza wiec wystarczy jako zmienna wyszczegolniona w programie
-db_name = ...
+from program.db_tables import db_name
 
 
 class Tasker:

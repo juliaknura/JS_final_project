@@ -5,6 +5,10 @@ def get_category_id(cat_name, engine):
     ...
 
 
+def get_category_name(cat_id, engine):
+    ...
+
+
 def by_category(cat_id, engine):
     ...
 
