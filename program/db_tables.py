@@ -1,6 +1,7 @@
 import datetime
+from typing import List
 
-from sqlalchemy import ForeignKey, create_engine
+from sqlalchemy import ForeignKey
 from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column, relationship
 
 db_name = "app_data"
@@ -23,7 +24,7 @@ class Tasks(Base):
     checked_off_date: Mapped[datetime.datetime]
 
     category: Mapped["Categories"] = relationship(back_populates="tasks")
-
+    subtasks: Mapped[List["Subtasks"]] = relationship(back_populates="parent")
 
 class Categories(Base):
     __tablename__ = "categories"
@@ -32,3 +33,12 @@ class Categories(Base):
     name: Mapped[str]
 
     tasks: Mapped["Tasks"] = relationship(back_populates="category")
+
+class Subtasks(Base):
+    __tablename__ = "subtasks"
+
+    subtask_id: Mapped[int] = mapped_column(primary_key=True)
+    name: Mapped[str]
+    parent_task_id: Mapped[int] = mapped_column(ForeignKey("tasks.task_id"))
+
+    parent: Mapped["Tasks"] = relationship(back_populates="subtasks")
