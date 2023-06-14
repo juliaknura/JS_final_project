@@ -9,6 +9,10 @@ def get_category_name(cat_id, engine):
     ...
 
 
+def get_category_list(engine):
+    ...
+
+
 def by_category(cat_id, engine):
     ...
 
