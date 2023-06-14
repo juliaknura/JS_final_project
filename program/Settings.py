@@ -3,7 +3,13 @@ import json
 
 class Settings:
     """This class handles settings"""
-    #TODO __init__
+
+    def __init__(self):
+        self.priority_dict = None
+        self.language_option = None
+        self.daily_list_priority_lvl = None
+        self.load_settings()
+
     def load_settings(self):
         """Loads saved settings"""
         with open("settings.json", "r") as settings_file:
@@ -13,7 +19,9 @@ class Settings:
             lang_option = settings_dict["language_option"]
 
             d_list_p_lvl = settings_dict["daily_list_priority_lvl"]
-        return priority_dict, lang_option, d_list_p_lvl
+        self.priority_dict = priority_dict
+        self.language_option = lang_option
+        self.daily_list_priority_lvl = d_list_p_lvl
 
     def save_settings(self):
         """Saves current app settings"""
@@ -29,14 +37,12 @@ class Settings:
         with open("settings.json", "w") as settings_file:
             json.dump(settings_dict, settings_file)
 
-
     def change_priority_lvl_settings(self, urgent: int, coming: int, far: int):
         """Changes priority level settings (time windows assigned to each priority level)"""
         self.priority_dict[0] = urgent
         self.priority_dict[1] = coming
         self.priority_dict[2] = far
         self.save_settings()
-
 
     def change_language_option(self, l_option: str):
         """Changes default language option setting"""
@@ -47,5 +53,3 @@ class Settings:
         """Changes daily list priority level setting"""
         self.daily_list_priority_lvl = new_lvl
         self.save_settings()
-
-
