@@ -26,3 +26,11 @@ class Task:
 
     def __lt__(self, other: "Task"):
         return self.deadline < other.deadline
+
+    def toggle(self):
+        if self.is_checked:
+            self.is_checked = False
+            self.checked_off_date = None
+        else:
+            self.is_checked = True
+            self.checked_off_date = datetime.now().replace(hour=0, minute=0, second=0, microsecond=0)
