@@ -1,7 +1,7 @@
 import datetime
 from typing import List
 
-from sqlalchemy import ForeignKey, create_engine
+from sqlalchemy import ForeignKey
 from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column, relationship
 
 db_name = "app_data"
@@ -39,6 +39,6 @@ class Subtasks(Base):
 
     subtask_id: Mapped[int] = mapped_column(primary_key=True)
     name: Mapped[str]
-    parentId: Mapped[int] = mapped_column(ForeignKey("tasks.task_id"))
+    parent_task_id: Mapped[int] = mapped_column(ForeignKey("tasks.task_id"))
 
     parent: Mapped["Tasks"] = relationship(back_populates="subtasks")
