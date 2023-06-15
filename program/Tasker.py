@@ -3,7 +3,7 @@ from sqlalchemy.orm import Session
 from program import db_tables
 from program.selecter import by_ddl, by_category, by_checked_off_date, by_exec_date
 from program.selecter import by_ddl, by_category, by_checked_off_date, by_exec_date, \
-    get_category_name, get_category_list, get_category_id, unchecked_tasks
+    get_category_name, get_category_list, get_category_id, unchecked_tasks, get_subtasks
 from sqlalchemy import create_engine, update, delete
 from datetime import datetime, timedelta
 from program.db_tables import Tasks, Subtasks
@@ -34,11 +34,19 @@ class Tasker:
 
     def _from_task_tuple_to_task(self, task_tuple):
         task_id, name, cat_id, task_desc, exec_date, deadline, is_checked, checked_off_date = task_tuple
-        cat_name = get_category_name(cat_id, self.engine)
-        priority = self._calculate_priority(deadline)
+
+        cat_name = get_category_name(cat_id, self.engine)   # switches cat_id with category name
+
+        priority = self._calculate_priority(deadline)   # assigns priority
+
+        subtask_list = get_subtasks(task_id, self.engine)   # pulls subtask list from database
+        subtask_dict = {}
+        for subtask in subtask_list:
+            name, is_sub_checked = subtask
+            subtask_dict[name] = is_sub_checked
         return task_id, Task(task_id=task_id, name=name, cat=cat_name, desc=task_desc, exec_date=exec_date,
                              deadline=deadline, is_checked=is_checked, checked_off_date=checked_off_date,
-                             priority=priority)
+                             priority=priority, subtasks=subtask_dict)
 
     def get_by_category(self, cat_name):
         """Fills Tasker's current task dictionary with all unchecked tasks from a given category"""
