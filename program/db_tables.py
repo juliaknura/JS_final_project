@@ -4,7 +4,8 @@ from typing import List, Optional
 from sqlalchemy import ForeignKey
 from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column, relationship
 
-db_name = "app_data"
+db_file_name = "app_data"
+db = f"sqlite:///{db_file_name}.db"
 
 
 class Base(DeclarativeBase):
@@ -30,8 +31,8 @@ class Tasks(Base):
 class Categories(Base):
     __tablename__ = "categories"
 
-    cat_id: Mapped[int] = mapped_column(primary_key=True)
-    name: Mapped[str]
+    cat_id: Mapped[int] = mapped_column(primary_key=True, autoincrement=True)
+    name: Mapped[str] = mapped_column(unique=True)
 
     tasks: Mapped["Tasks"] = relationship(back_populates="category")
 
