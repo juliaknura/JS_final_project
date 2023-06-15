@@ -25,10 +25,24 @@ class Task:
         return f"Id: {self.task_id}, name: {self.name}, category: {self.cat}, is checked? {self.is_checked}"
 
     def __eq__(self, other: "Task"):
-        return self.deadline == other.deadline
+        if self.deadline is None and other.deadline is None:
+            return True
+        elif self.deadline is None:
+            return False
+        elif other.deadline is None:
+            return False
+        else:
+            return self.deadline == other.deadline
 
     def __lt__(self, other: "Task"):
-        return self.deadline < other.deadline
+        if self.deadline is None and other.deadline is None:
+            return True
+        elif self.deadline is None:
+            return False
+        elif other.deadline is None:
+            return True
+        else:
+            return self.deadline < other.deadline
 
     def toggle(self):
         """Switch the state of the task"""
