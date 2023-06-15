@@ -130,19 +130,20 @@ class Tasker:
         elif days_diff <= far_bar:
             return 2
 
-    def add_task(self, task_id: int, name: str, cat: str, desc: str, exec_date: datetime, deadline: datetime,
+    def add_task(self, name: str, cat: str, desc: str, exec_date: datetime, deadline: datetime,
                  is_checked: bool, checked_off_date: datetime, subtasks: list):
         """Adds a new task to the database"""
         task_priority = self._calculate_priority(deadline)
         cat_id = get_category_id(cat, self.engine)
         with Session(self.engine) as session:
-            task = Tasks(task_id=task_id, name=name, cat=cat_id, desc=desc, exec_date=exec_date,
+            task = Tasks(name=name, cat=cat_id, desc=desc, exec_date=exec_date,
                          deadline=deadline, is_checked=is_checked, checked_off_date=checked_off_date,
                          task_priority=task_priority)
             session.add(task)
 
             for subtask_name in subtasks:
-                subtask = Subtasks(name=subtask_name, parent_task_id=task_id)
+                subtask = Subtasks(name=subtask_name, parent_task_id=task.task_id)
+                session.add(subtask)
 
             session.commit()
 
