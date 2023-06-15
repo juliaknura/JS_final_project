@@ -11,10 +11,15 @@ eng_dict = {
     "all_tasks_button": "ALL TASKS",
     "new_subtask_button": "Add subtask",
     "delete_subtask_button": "Delete subtask",
-    "delete_task_button": "Delete task"
+    "delete_task_button": "Delete task",
+    "all_tasks_window_title": "All tasks",
+    "back_button": "BACK",
+    "checked_tasks_button": "Checked tasks",
+    "checked_tasks_window_title": "Checked tasks by date",
+    "template_button": "Use as template",
+    "choose_date_button": "Choose",
+    "date_label": "Choose the day on which the task was executed:"
 }
-
-
 
 pol_dict = {
     "main_window_title": "Aplikacja do zarządzania zadaniami",
@@ -29,10 +34,15 @@ pol_dict = {
     "all_tasks_button": "WSZYSTKIE ZADANIA",
     "new_subtask_button": "Dodaj podzadanie",
     "delete_subtask_button": "Usuń podzadanie",
-    "delete_task_button": "Usuń zadanie"
+    "delete_task_button": "Usuń zadanie",
+    "all_tasks_window_title": "Wszystkie zadania",
+    "back_button": "POWRÓT",
+    "checked_tasks_button": "Wykonane zadania",
+    "checked_tasks_window_title": "Wykonane zadania z podziałem na dni",
+    "template_button": "Wykorzystaj jako szablon",
+    "choose_date_button": "Wybierz",
+    "date_label": "Wybierz dzień, w którym zadanie zostało wykonane:"
 }
-
-
 
 silly_dict = {
     "main_window_title": "Apka do zbierania taskow do kupy",
@@ -47,7 +57,14 @@ silly_dict = {
     "all_tasks_button": "TO NIE WSZYSTKO",
     "new_subtask_button": "Kolejny (ugh) sidequest",
     "delete_subtask_button": "Abort sidequest",
-    "delete_task_button": "Abort me mother"
+    "delete_task_button": "Abort me mother",
+    "all_tasks_window_title": "Reszta questów",
+    "back_button": "WRACAJTA",
+    "checked_tasks_button": "Spełnione questy",
+    "checked_tasks_window_title": "Spełnione questy",
+    "template_button": "Wykorzystaj jako szablon TY LENIU",
+    "choose_date_button": "DAWAAAAAJ",
+    "date_label": "Wybierz dzień, w którym quest został odwalony:"
 }
 
 language_options = {

@@ -25,7 +25,6 @@ class Tasker:
         # level 2 - far
         self.daily_list_priority_lvl = daily_list_prior_lvl
         self.get_today_list()
-
     def get_current_list(self):
         """Returns the current tasks in a sorted list"""
         curr_task_list = list(self.current_task_dict.values())
