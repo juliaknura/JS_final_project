@@ -17,7 +17,6 @@ class Tasker:
     def __init__(self, priorities_dict, daily_list_prior_lvl):
         self.current_task_dict = None
         self.engine = create_engine(db_name, echo=True)
-        self.engine = None
         # TODO na razie niech bedzie verbose zeby ogladac co sie dzieje, potem to zmienimy
         self.priority_dict = priorities_dict
         # A dictionary with default priority level settings:
