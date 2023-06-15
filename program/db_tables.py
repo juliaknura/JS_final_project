@@ -39,6 +39,7 @@ class Subtasks(Base):
 
     subtask_id: Mapped[int] = mapped_column(primary_key=True)
     name: Mapped[str]
+    is_checked: Mapped[bool]
     parent_task_id: Mapped[int] = mapped_column(ForeignKey("tasks.task_id"))
 
     parent: Mapped["Tasks"] = relationship(back_populates="subtasks")
