@@ -1,3 +1,5 @@
+from typing import Optional
+
 from sqlalchemy.orm import Session
 
 from program import db_tables
@@ -25,6 +27,7 @@ class Tasker:
         # level 2 - far
         self.daily_list_priority_lvl = daily_list_prior_lvl
         self.get_today_list()
+
     def get_current_list(self):
         """Returns the current tasks in a sorted list"""
         curr_task_list = list(self.current_task_dict.values())
@@ -115,19 +118,22 @@ class Tasker:
         """Changes daily list priority level setting in the current app run"""
         self.daily_list_priority_lvl = new_lvl
 
-    def _calculate_priority(self, deadline_date: datetime):
+    def _calculate_priority(self, deadline_date: Optional[datetime]):
         """Calculates the number of days left until the deadline (rounds up) and returns priority category"""
-        normalized_today = datetime.now().replace(hour=0, minute=0, second=0, microsecond=0)
-        days_diff = (deadline_date - normalized_today).days
-        urgent_bar = self.priority_dict[0]
-        coming_bar = self.priority_dict[1]
-        far_bar = self.priority_dict[2]
-        if days_diff <= urgent_bar:
-            return 0
-        elif days_diff <= coming_bar:
-            return 1
-        elif days_diff <= far_bar:
+        if deadline_date is None:
             return 2
+        else:
+            normalized_today = datetime.now().replace(hour=0, minute=0, second=0, microsecond=0)
+            days_diff = (deadline_date - normalized_today).days
+            urgent_bar = self.priority_dict[0]
+            coming_bar = self.priority_dict[1]
+            far_bar = self.priority_dict[2]
+            if days_diff <= urgent_bar:
+                return 0
+            elif days_diff <= coming_bar:
+                return 1
+            elif days_diff <= far_bar:
+                return 2
 
     def add_task(self, name: str, cat: str, desc: str, exec_date: datetime, deadline: datetime, subtasks: list):
         """Adds a new task to the database"""
