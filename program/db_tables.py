@@ -1,5 +1,5 @@
 import datetime
-from typing import List
+from typing import List, Optional
 
 from sqlalchemy import ForeignKey
 from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column, relationship
@@ -17,11 +17,11 @@ class Tasks(Base):
     task_id: Mapped[int] = mapped_column(primary_key=True)
     name: Mapped[str]
     cat_id: Mapped[int] = mapped_column(ForeignKey("categories.cat_id"))
-    task_desc: Mapped[str]
-    exec_date: Mapped[datetime.datetime]
-    deadline: Mapped[datetime.datetime]
+    task_desc: Mapped[Optional[str]]
+    exec_date: Mapped[Optional[datetime.datetime]]
+    deadline: Mapped[Optional[datetime.datetime]]
     is_checked: Mapped[bool]
-    checked_off_date: Mapped[datetime.datetime]
+    checked_off_date: Mapped[Optional[datetime.datetime]]
 
     category: Mapped["Categories"] = relationship(back_populates="tasks")
     subtasks: Mapped[List["Subtasks"]] = relationship(back_populates="parent", cascade="all, delete")
@@ -37,7 +37,7 @@ class Categories(Base):
 class Subtasks(Base):
     __tablename__ = "subtasks"
 
-    name: Mapped[str]
+    name: Mapped[str] = mapped_column()
     is_checked: Mapped[bool]
     parent_task_id: Mapped[int] = mapped_column(ForeignKey("tasks.task_id"))
 
