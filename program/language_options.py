@@ -11,10 +11,11 @@ eng_dict = {
     "all_tasks_button": "ALL TASKS",
     "new_subtask_button": "Add subtask",
     "delete_subtask_button": "Delete subtask",
-    "delete_task_button": "Delete task"
+    "delete_task_button": "Delete task",
+    "all_tasks_window_title": "All tasks",
+    "back_button": "BACK",
+    "checked_tasks_button": "Checked tasks"
 }
-
-
 
 pol_dict = {
     "main_window_title": "Aplikacja do zarządzania zadaniami",
@@ -29,10 +30,11 @@ pol_dict = {
     "all_tasks_button": "WSZYSTKIE ZADANIA",
     "new_subtask_button": "Dodaj podzadanie",
     "delete_subtask_button": "Usuń podzadanie",
-    "delete_task_button": "Usuń zadanie"
+    "delete_task_button": "Usuń zadanie",
+    "all_tasks_window_title": "Wszystkie zadania",
+    "back_button": "POWRÓT",
+    "checked_tasks_button": "Wykonane zadania"
 }
-
-
 
 silly_dict = {
     "main_window_title": "Apka do zbierania taskow do kupy",
@@ -47,7 +49,10 @@ silly_dict = {
     "all_tasks_button": "TO NIE WSZYSTKO",
     "new_subtask_button": "Kolejny (ugh) sidequest",
     "delete_subtask_button": "Abort sidequest",
-    "delete_task_button": "Abort me mother"
+    "delete_task_button": "Abort me mother",
+    "all_tasks_window_title": "Reszta questów",
+    "back_button": "WRACAJTA",
+    "checked_tasks_button": "Spełnione questy"
 }
 
 language_options = {
