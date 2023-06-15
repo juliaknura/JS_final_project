@@ -6,7 +6,7 @@ from program.selecter import by_ddl, by_category, by_checked_off_date, by_exec_d
     get_category_name, get_category_list, get_category_id, unchecked_tasks
 from sqlalchemy import create_engine, update, delete
 from datetime import datetime, timedelta
-from program.db_tables import Tasks
+from program.db_tables import Tasks, Subtasks
 from program.db_tables import db_name
 from program.Task import Task
 
@@ -135,14 +135,17 @@ class Tasker:
             session.commit()
 
     def delete_task(self, task_id):
+        """Deletes given task locally and in the database"""
         del self.current_task_dict[task_id]
-        query = (delete(Tasks)
-                 .where(task_id=task_id))
+        query1 = (delete(Subtasks)
+                  .where(parent_task_id=task_id))
+
+        query2 = (delete(Tasks)
+                  .where(task_id=task_id))
 
         with self.engine.begin() as conn:
-            conn.execute(query)
-
-
+            conn.execute(query1)
+            conn.execute(query2)
 
     def toggle_task(self, task_id):
         """Changes the state of a chosen, stored task and updates database"""
