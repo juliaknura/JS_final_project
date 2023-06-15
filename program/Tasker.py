@@ -135,6 +135,8 @@ class Tasker:
             session.commit()
 
     def add_subtask(self, task_id, subtask_name):
+        """Adds subtask locally and in the database"""
+        self.current_task_dict[task_id].add_subtask(subtask_name)
         with Session(self.engine) as session:
             subtask = Subtasks(parent_task_id=task_id, name=subtask_name, is_checked=False)
             session.add(subtask)
@@ -161,7 +163,8 @@ class Tasker:
             conn.execute(query)
 
     def delete_subtask(self, task_id, subtask_name):
-        """Deletes a given subtask"""
+        """Deletes a given subtask locally and in the database"""
+        self.current_task_dict[task_id].delete_subtask(subtask_name)
         query = (delete(Subtasks)
                  .where(Subtasks.parent_task_id == task_id)
                  .where(Subtasks.name == subtask_name))
@@ -187,7 +190,7 @@ class Tasker:
         query = (update(Subtasks)
                  .where(Subtasks.parent_task_id == task_id)
                  .where(Subtasks.name == subtask_name)
-                 .values(is_checked=task.subtasks[subtask_name][1]))
+                 .values(is_checked=task.subtasks[subtask_name]))
 
         with self.engine.begin() as conn:
             conn.execute(query)
