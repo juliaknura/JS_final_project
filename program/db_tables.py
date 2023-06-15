@@ -14,7 +14,7 @@ class Base(DeclarativeBase):
 class Tasks(Base):
     __tablename__ = "tasks"
 
-    task_id: Mapped[int] = mapped_column(primary_key=True)
+    task_id: Mapped[int] = mapped_column(primary_key=True, autoincrement=True)
     name: Mapped[str]
     cat_id: Mapped[int] = mapped_column(ForeignKey("categories.cat_id"))
     task_desc: Mapped[Optional[str]]
@@ -26,6 +26,7 @@ class Tasks(Base):
     category: Mapped["Categories"] = relationship(back_populates="tasks")
     subtasks: Mapped[List["Subtasks"]] = relationship(back_populates="parent", cascade="all, delete")
 
+
 class Categories(Base):
     __tablename__ = "categories"
 
@@ -33,6 +34,7 @@ class Categories(Base):
     name: Mapped[str]
 
     tasks: Mapped["Tasks"] = relationship(back_populates="category")
+
 
 class Subtasks(Base):
     __tablename__ = "subtasks"
