@@ -24,7 +24,7 @@ class Tasks(Base):
     checked_off_date: Mapped[datetime.datetime]
 
     category: Mapped["Categories"] = relationship(back_populates="tasks")
-    subtasks: Mapped[List["Subtasks"]] = relationship(back_populates="parent")
+    subtasks: Mapped[List["Subtasks"]] = relationship(back_populates="parent", cascade="all, delete")
 
 class Categories(Base):
     __tablename__ = "categories"
