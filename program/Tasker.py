@@ -16,8 +16,8 @@ class Tasker:
 
     def __init__(self, priorities_dict, daily_list_prior_lvl):
         self.current_task_dict = None
-        self.get_today_list()
-        self.engine = create_engine(db_name, echo=True)
+        # self.engine = create_engine(db_name, echo=True) TODO odkomentowac
+        self.engine = None
         # TODO na razie niech bedzie verbose zeby ogladac co sie dzieje, potem to zmienimy
         self.priority_dict = priorities_dict
         # A dictionary with default priority level settings:
@@ -25,6 +25,7 @@ class Tasker:
         # level 1 - coming
         # level 2 - far
         self.daily_list_priority_lvl = daily_list_prior_lvl
+        # self.get_today_list() TODO odkomentowac
 
     def get_current_list(self):
         """Returns the current tasks in a sorted list"""
