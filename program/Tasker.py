@@ -134,26 +134,60 @@ class Tasker:
             session.add(task)
             session.commit()
 
+    def add_subtask(self, task_id, subtask_name):
+        with Session(self.engine) as session:
+            subtask = Subtasks(parent_task_id=task_id, name=subtask_name, is_checked=False)
+            session.add(subtask)
+            session.commit()
+
     def delete_task(self, task_id):
         """Deletes given task locally and in the database"""
         del self.current_task_dict[task_id]
-        query1 = (delete(Subtasks)
-                  .where(parent_task_id=task_id))
-
+        """query1 = (delete(Subtasks)
+                  .where(Subtasks.parent_task_id == task_id))
+        """
         query2 = (delete(Tasks)
-                  .where(task_id=task_id))
+                  .where(Tasks.task_id == task_id))
 
         with self.engine.begin() as conn:
-            conn.execute(query1)
+            #conn.execute(query1)
             conn.execute(query2)
+
+    def delete_all_checked_off(self):
+        "Deletes all tasks in the database that have been checked off"
+        query = delete(Subtasks).where(Subtasks.checked_off == True)
+
+        with self.engine.begin() as conn:
+            conn.execute(query)
+
+    def delete_subtask(self, task_id, subtask_name):
+        """Deletes a given subtask"""
+        query = (delete(Subtasks)
+                 .where(Subtasks.parent_task_id == task_id)
+                 .where(Subtasks.name == subtask_name))
+
+        with self.engine.begin() as conn:
+            conn.execute(query)
 
     def toggle_task(self, task_id):
         """Changes the state of a chosen, stored task and updates database"""
         task = self.current_task_dict[task_id]
-        task.toggle()
+        task.toggle() # TODO pointer or copy??
         query = (update(Tasks)
                  .where(Tasks.task_id == task_id)
                  .values(is_checked=task.is_checked, checked_off_date=task.checked_off_date))
+
+        with self.engine.begin() as conn:
+            conn.execute(query)
+
+    def toggle_subtask(self, task_id, subtask_name):
+        """Changes the state of a chosen, stored subtask and updates database"""
+        task = self.current_task_dict[task_id]
+        task.toggle_subtask(subtask_name) # TODO as above
+        query = (update(Subtasks)
+                 .where(Subtasks.parent_task_id == task_id)
+                 .where(Subtasks.name == subtask_name)
+                 .values(is_checked=task.subtasks[subtask_name][1]))
 
         with self.engine.begin() as conn:
             conn.execute(query)
