@@ -1,5 +1,5 @@
 from PyQt5.QtWidgets import QApplication, QMainWindow, QLabel, QWidget, QHBoxLayout, QVBoxLayout, \
-    QPushButton, QLineEdit, QDateEdit, QTabWidget
+    QPushButton, QLineEdit, QDateEdit, QSpacerItem, QSizePolicy
 from PyQt5.QtGui import QPixmap, QIcon, QFont
 from PyQt5.QtCore import QRect, QSize, Qt
 from pyqt_checkbox_list_widget.checkBoxListWidget import CheckBoxListWidget
@@ -9,37 +9,35 @@ from program.Settings import Settings
 from program.Tasker import Tasker
 from program.Task import Task
 import os
-from gui.checked_tasks_window import CheckedTasksWindow
 
 
-class AllTasksWindow(QWidget):
+class CheckedTasksWindow(QWidget):
     def __init__(self, parent, tasker, settings):
         super().__init__()
 
         self.parent_widget = parent
         self.tasker = tasker
         self.settings = settings
-        self.categories = self.get_category_list()
 
         # hide parent window
         self.parent_widget.hide()
 
         # language settings
         self.language_setting = self.settings.language_option
-        # self.language_setting = "polish"
+        # self.language_setting = "silly"
         self.language_dict = language_options[self.language_setting]
         # TODO - to pewnie lepiej bedzie potem wyszczegolnic do funkcji
 
         # main window properties
-        self.setWindowTitle(self.language_dict["all_tasks_window_title"])
+        self.setWindowTitle(self.language_dict["checked_tasks_window_title"])
         self.setGeometry(100, 100, 940, 800)
 
         # widgets
         self.main_widget = QWidget()
         self.top_actions_widget = QWidget()
         self.top_actions_widget.setFixedSize(940, 75)
-        self.tab_widget = QWidget()
-        self.tab_widget.setFixedSize(940, 50)
+        self.date_widget = QWidget()
+        self.date_widget.setFixedSize(940, 40)
         self.central_content_widget = QWidget()
         self.task_list_widget = QWidget()
         self.detail_widget = QWidget()
@@ -47,7 +45,7 @@ class AllTasksWindow(QWidget):
         self.task_actions_widget = QWidget()
 
         self.left_buttons_widget = QWidget()
-        self.left_buttons_widget.setFixedSize(350, 50)
+        self.left_buttons_widget.setFixedSize(200, 50)
         self.right_buttons_widget = QWidget()
         self.right_buttons_widget.setFixedSize(350, 60)
 
@@ -58,8 +56,8 @@ class AllTasksWindow(QWidget):
         self.top_actions_layout = QHBoxLayout()
         self.top_actions_widget.setLayout(self.top_actions_layout)
 
-        self.tab_layout = QVBoxLayout()
-        self.tab_widget.setLayout(self.tab_layout)
+        self.date_layout = QHBoxLayout()
+        self.date_widget.setLayout(self.date_layout)
 
         self.central_content_layout = QHBoxLayout()
         self.central_content_widget.setLayout(self.central_content_layout)
@@ -82,11 +80,10 @@ class AllTasksWindow(QWidget):
         self.right_buttons_layout = QHBoxLayout()
         self.right_buttons_widget.setLayout(self.right_buttons_layout)
 
+
         # buttons
         self.back_button = QPushButton()
         self.back_button.setText(self.language_dict["back_button"])
-        self.checked_tasks_button = QPushButton()
-        self.checked_tasks_button.setText(self.language_dict["checked_tasks_button"])
         self.action_menu_button = QPushButton()
         self.action_menu_button.setText(self.language_dict["action_menu_button"])
         self.action_menu_button.setFixedSize(170, 50)
@@ -100,22 +97,27 @@ class AllTasksWindow(QWidget):
         self.settings_button.setIconSize(QSize(40, 40))
         self.settings_button.setFixedSize(50, 50)
         self.settings_button.show()
-        self.new_subtask_button = QPushButton()
-        self.new_subtask_button.setText(self.language_dict["new_subtask_button"])
-        self.delete_task_button = QPushButton()
-        self.delete_task_button.setText(self.language_dict["delete_task_button"])
-        self.delete_subtask_button = QPushButton()
-        self.delete_subtask_button.setText(self.language_dict["delete_subtask_button"])
+        self.template_button = QPushButton()
+        self.template_button.setText(self.language_dict["template_button"])
+        self.choose_date_button = QPushButton()
+        self.choose_date_button.setText(self.language_dict["choose_date_button"])
+
 
         # text_fields
         self.name_field = QLineEdit()
         self.name_field.setEnabled(False)
+        self.cat_field = QLineEdit()
+        self.cat_field.setEnabled(False)
         self.desc_field = QLineEdit()
         self.desc_field.setEnabled(False)
         self.deadline_field = QDateEdit()
         self.deadline_field.setEnabled(False)
         self.exec_date_field = QDateEdit()
         self.exec_date_field.setEnabled(False)
+        self.date_field = QDateEdit()
+
+        # spacer
+        self.spacer = QSpacerItem(400, 1, QSizePolicy.Minimum, QSizePolicy.Expanding)
 
         # checkbox widgets
         self.task_list = CheckBoxListWidget()
@@ -127,16 +129,8 @@ class AllTasksWindow(QWidget):
         self.task_deadline_label = QLabel(self.language_dict["task_deadline_label"])
         self.task_exec_date_label = QLabel(self.language_dict["task_exec_date_label"])
         self.subtasks_label = QLabel(self.language_dict["subtasks_label"])
-
-        # tabs (there's so much code in there bc they're 'fake' tabs)
-        number_of_tabs = len(self.categories)
-        placeholders = []
-        for _ in range(number_of_tabs):
-            placeholders.append(QLabel())
-        self.tabs = QTabWidget()
-        for i in range(number_of_tabs):
-            self.tabs.addTab(placeholders[i], self.categories[i])
-        self.tabs.setFixedSize(940, 27)
+        self.date_label = QLabel(self.language_dict["date_label"])
+        self.task_cat_label = QLabel(self.language_dict["task_cat_label"])
 
         # arrange main window
         self.self_layout = QHBoxLayout()
@@ -145,7 +139,7 @@ class AllTasksWindow(QWidget):
 
         # arrange main widget
         self.main_layout.addWidget(self.top_actions_widget)
-        self.main_layout.addWidget(self.tab_widget)
+        self.main_layout.addWidget(self.date_widget)
         self.main_layout.addWidget(self.central_content_widget)
 
         # arrange top actions widget
@@ -154,15 +148,18 @@ class AllTasksWindow(QWidget):
 
         # arrange left buttons
         self.left_buttons_layout.addWidget(self.back_button)
-        self.left_buttons_layout.addWidget(self.checked_tasks_button)
 
         # arrange right buttons
         self.right_buttons_layout.addWidget(self.action_menu_button)
         self.right_buttons_layout.addWidget(self.settings_button)
         self.right_buttons_layout.addWidget(self.add_task_button)
 
-        # arrange tab widget
-        self.tab_layout.addWidget(self.tabs)
+        # arrange date widget
+        self.date_layout.addWidget(self.date_label)
+        self.date_layout.addWidget(self.date_field)
+        self.date_layout.addWidget(self.choose_date_button)
+        self.date_layout.addItem(self.spacer)
+
 
         # arrange central content widget
         self.central_content_layout.addWidget(self.task_list_widget)
@@ -175,9 +172,12 @@ class AllTasksWindow(QWidget):
         self.detail_layout.addWidget(self.task_details_widget)
         self.detail_layout.addWidget(self.task_actions_widget)
 
+
         # arrange task det widget
         self.task_details_layout.addWidget(self.task_name_label)
         self.task_details_layout.addWidget(self.name_field)
+        self.task_details_layout.addWidget(self.task_cat_label)
+        self.task_details_layout.addWidget(self.cat_field)
         self.task_details_layout.addWidget(self.task_desc_label)
         self.task_details_layout.addWidget(self.desc_field)
         self.task_details_layout.addWidget(self.task_deadline_label)
@@ -188,29 +188,12 @@ class AllTasksWindow(QWidget):
         self.task_details_layout.addWidget(self.subtask_list)
 
         # arrange task actions widget
-        self.task_actions_layout.addWidget(self.new_subtask_button)
-        self.task_actions_layout.addWidget(self.delete_subtask_button)
-        self.task_actions_layout.addWidget(self.delete_task_button)
+        self.task_actions_layout.addWidget(self.template_button, alignment=Qt.AlignCenter)
 
         # button events
-        self.tabs.tabBarClicked.connect(self.changed_category)
         self.back_button.clicked.connect(self.back_to_main_window)
-        self.checked_tasks_button.clicked.connect(self.checked_tasks_window_show)
-
-    def changed_category(self, index):
-        self.name_field.setText(self.categories[index])
 
     def back_to_main_window(self):
         self.parent_widget.update_window()
         self.parent_widget.show()
         self.hide()
-
-    def get_category_list(self):
-        return ["kat1", "kat2", "kat3"]
-
-    def update_window(self):
-        print("all tasks window updated")
-
-    def checked_tasks_window_show(self):
-        self.checked_tasks_window = CheckedTasksWindow(self, self.tasker, self.settings)
-        self.checked_tasks_window.show()
