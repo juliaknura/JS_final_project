@@ -6,8 +6,8 @@ from program.selecter import by_ddl, by_category, by_checked_off_date, by_exec_d
     get_category_name, get_category_list, get_category_id, unchecked_tasks, get_subtasks
 from sqlalchemy import create_engine, update, delete
 from datetime import datetime, timedelta
-from program.db_tables import Tasks, Subtasks
-from program.db_tables import db_name
+from program.db_tables import Tasks, Subtasks, Categories
+from program.db_tables import db
 from program.Task import Task
 
 
@@ -16,7 +16,7 @@ class Tasker:
 
     def __init__(self, priorities_dict, daily_list_prior_lvl):
         self.current_task_dict = None
-        self.engine = create_engine(db_name, echo=True)
+        self.engine = create_engine(db, echo=True)
         # TODO na razie niech bedzie verbose zeby ogladac co sie dzieje, potem to zmienimy
         self.priority_dict = priorities_dict
         # A dictionary with default priority level settings:
@@ -32,29 +32,29 @@ class Tasker:
         curr_task_list = sorted(curr_task_list)
         return curr_task_list
 
-    def _from_task_tuple_to_task(self, task_tuple):
-        task_id, name, cat_id, task_desc, exec_date, deadline, is_checked, checked_off_date = task_tuple
+    def _from_task_tuple_to_task(self, task_entry):
+        cat_name = get_category_name(task_entry.cat_id, self.engine)  # switches cat_id with category name
 
-        cat_name = get_category_name(cat_id, self.engine)   # switches cat_id with category name
+        priority = self._calculate_priority(task_entry.deadline)  # assigns priority
 
-        priority = self._calculate_priority(deadline)   # assigns priority
-
-        subtask_list = get_subtasks(task_id, self.engine)   # pulls subtask list from database
+        subtask_list = get_subtasks(task_entry.task_id, self.engine)  # pulls subtask list from database
         subtask_dict = {}
         for subtask in subtask_list:
             name, is_sub_checked = subtask
             subtask_dict[name] = is_sub_checked
-        return task_id, Task(task_id=task_id, name=name, cat=cat_name, desc=task_desc, exec_date=exec_date,
-                             deadline=deadline, is_checked=is_checked, checked_off_date=checked_off_date,
-                             priority=priority, subtasks=subtask_dict)
+        return task_entry.task_id, Task(task_id=task_entry.task_id, name=task_entry.name, cat=cat_name,
+                                        desc=task_entry.task_desc, exec_date=task_entry.exec_date,
+                                        deadline=task_entry.deadline, is_checked=task_entry.is_checked,
+                                        checked_off_date=task_entry.checked_off_date,
+                                        priority=priority, subtasks=subtask_dict)
 
     def get_by_category(self, cat_name):
         """Fills Tasker's current task dictionary with all unchecked tasks from a given category"""
         cat_id = get_category_id(cat_name, self.engine)[0]
-        task_tuple_list = by_category(cat_id, self.engine)
+        task_db_entries = by_category(cat_id, self.engine)
         task_dict = {}
-        for task_tuple in task_tuple_list:
-            task_id, task = self._from_task_tuple_to_task(task_tuple)
+        for task_entries in task_db_entries:
+            task_id, task = self._from_task_tuple_to_task(task_entries[0])
             task_dict[task_id] = task
 
         self.current_task_dict = task_dict
@@ -120,9 +120,9 @@ class Tasker:
         """Calculates the number of days left until the deadline (rounds up) and returns priority category"""
         normalized_today = datetime.now().replace(hour=0, minute=0, second=0, microsecond=0)
         days_diff = (deadline_date - normalized_today).days
-        urgent_bar = self.priority_dict[1]
-        coming_bar = self.priority_dict[2]
-        far_bar = self.priority_dict[3]
+        urgent_bar = self.priority_dict[0]
+        coming_bar = self.priority_dict[1]
+        far_bar = self.priority_dict[2]
         if days_diff <= urgent_bar:
             return 0
         elif days_diff <= coming_bar:
@@ -130,15 +130,13 @@ class Tasker:
         elif days_diff <= far_bar:
             return 2
 
-    def add_task(self, name: str, cat: str, desc: str, exec_date: datetime, deadline: datetime,
-                 is_checked: bool, checked_off_date: datetime, subtasks: list):
+    def add_task(self, name: str, cat: str, desc: str, exec_date: datetime, deadline: datetime, subtasks: list):
         """Adds a new task to the database"""
         task_priority = self._calculate_priority(deadline)
-        cat_id = get_category_id(cat, self.engine)
+        cat_id = get_category_id(cat, self.engine)[0]
         with Session(self.engine) as session:
-            task = Tasks(name=name, cat=cat_id, desc=desc, exec_date=exec_date,
-                         deadline=deadline, is_checked=is_checked, checked_off_date=checked_off_date,
-                         task_priority=task_priority)
+            task = Tasks(name=name, cat_id=cat_id, task_desc=desc, exec_date=exec_date,
+                         deadline=deadline, is_checked=False, checked_off_date=None)
             session.add(task)
 
             for subtask_name in subtasks:
@@ -165,7 +163,7 @@ class Tasker:
                   .where(Tasks.task_id == task_id))
 
         with self.engine.begin() as conn:
-            #conn.execute(query1)
+            # conn.execute(query1)
             conn.execute(query2)
 
     def delete_all_checked_off(self):
@@ -188,7 +186,7 @@ class Tasker:
     def toggle_task(self, task_id):
         """Changes the state of a chosen, stored task and updates database"""
         task = self.current_task_dict[task_id]
-        task.toggle() # TODO pointer or copy??
+        task.toggle()  # TODO pointer or copy??
         query = (update(Tasks)
                  .where(Tasks.task_id == task_id)
                  .values(is_checked=task.is_checked, checked_off_date=task.checked_off_date))
@@ -199,11 +197,23 @@ class Tasker:
     def toggle_subtask(self, task_id, subtask_name):
         """Changes the state of a chosen, stored subtask and updates database"""
         task = self.current_task_dict[task_id]
-        task.toggle_subtask(subtask_name) # TODO as above
+        task.toggle_subtask(subtask_name)  # TODO as above
         query = (update(Subtasks)
                  .where(Subtasks.parent_task_id == task_id)
                  .where(Subtasks.name == subtask_name)
                  .values(is_checked=task.subtasks[subtask_name]))
+
+        with self.engine.begin() as conn:
+            conn.execute(query)
+
+    def add_category(self, cat_name):
+        with Session(self.engine) as session:
+            cat = Categories(name=cat_name)
+            session.add(cat)
+            session.commit()
+
+    def delete_category(self, cat_name):
+        query = delete(Categories).where(Categories.name == cat_name)
 
         with self.engine.begin() as conn:
             conn.execute(query)

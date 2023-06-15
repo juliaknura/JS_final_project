@@ -1,13 +1,15 @@
 import functools
 from datetime import datetime
+from typing import Optional
 
 
 @functools.total_ordering
 class Task:
     """Class for local (in an app) representation of a task"""
 
-    def __init__(self, task_id: int, name: str, cat: str, desc: str, exec_date: datetime, deadline: datetime,
-                 is_checked: bool, checked_off_date: datetime, priority: int, subtasks: dict):
+    def __init__(self, task_id: int, name: str, cat: str, desc: Optional[str], exec_date: Optional[datetime],
+                 deadline: Optional[datetime], is_checked: bool, checked_off_date: Optional[datetime],
+                 priority: int, subtasks: Optional[dict]):
         self.task_id = task_id
         self.name = name
         self.cat = cat
