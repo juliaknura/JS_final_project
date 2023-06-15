@@ -24,7 +24,7 @@ class Tasks(Base):
     checked_off_date: Mapped[datetime.datetime]
 
     category: Mapped["Categories"] = relationship(back_populates="tasks")
-    subtasks: Mapped[List["Subtasks"]] = relationship(back_populates="parent")
+    subtasks: Mapped[List["Subtasks"]] = relationship(back_populates="parent", cascade="all, delete")
 
 class Categories(Base):
     __tablename__ = "categories"
@@ -37,9 +37,9 @@ class Categories(Base):
 class Subtasks(Base):
     __tablename__ = "subtasks"
 
-    subtask_id: Mapped[int] = mapped_column(primary_key=True)
     name: Mapped[str]
     is_checked: Mapped[bool]
     parent_task_id: Mapped[int] = mapped_column(ForeignKey("tasks.task_id"))
 
     parent: Mapped["Tasks"] = relationship(back_populates="subtasks")
+    __mapper_args__ = {"primary_key": [parent_task_id, name]}
