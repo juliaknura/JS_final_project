@@ -9,6 +9,29 @@ from program.Settings import Settings
 from program.Tasker import Tasker
 from program.Task import Task
 import os
+from gui.all_tasks_window import AllTasksWindow
+
+# for reference
+# class NewWindow(QWidget):
+#     def __init__(self, parent):
+#
+#         super().__init__()
+#         self.parent = parent
+#         self.parent.hide()
+#         self.layout = QVBoxLayout()
+#         self.button = QPushButton()
+#         self.button.setText("Back")
+#         self.layout.addWidget(self.button)
+#         self.setLayout(self.layout)
+#
+#         self.button.clicked.connect(self.back_button)
+#
+#     def back_button(self):
+#         # i tutaj musi byc wywolanie funkcji update w parencie i bedzie smigac, pieknie
+#         self.parent.show()
+#         self.hide()
+
+
 
 
 class MainWindow(QMainWindow):
@@ -196,3 +219,21 @@ class MainWindow(QMainWindow):
         self.task_actions_layout.addWidget(self.delete_subtask_button)
         self.task_actions_layout.addWidget(self.delete_task_button)
         self.task_actions_widget.setLayout(self.task_actions_layout)
+
+        # add button functionalities
+        self.all_tasks_button.clicked.connect(self.all_tasks_window_show)
+
+    # for reference
+    # def new_window_test(self):
+    #     self.w = NewWindow(self)
+    #     self.w.show()
+
+    def all_tasks_window_show(self):
+        self.all_tasks_window = AllTasksWindow(self, self.tasker, self.settings)
+        self.all_tasks_window.show()
+
+
+    def update_window(self):
+        # updates just in case things have changed in other views
+        print("main window updated")
+
