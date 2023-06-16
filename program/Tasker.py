@@ -1,9 +1,6 @@
 from typing import Optional
 
 from sqlalchemy.orm import Session
-
-from program import db_tables
-from program.selecter import by_ddl, by_category, by_checked_off_date, by_exec_date
 from program.selecter import by_ddl, by_category, by_checked_off_date, by_exec_date, \
     get_category_name, get_category_list, get_category_id, unchecked_tasks, get_subtasks
 from sqlalchemy import create_engine, update, delete
@@ -218,7 +215,12 @@ class Tasker:
             session.commit()
 
     def delete_category(self, cat_name):
-        query = delete(Categories).where(Categories.name == cat_name)
+        if len(by_category(cat_name, self.engine)) == 0:
+            query = delete(Categories).where(Categories.name == cat_name)
 
-        with self.engine.begin() as conn:
-            conn.execute(query)
+            with self.engine.begin() as conn:
+                conn.execute(query)
+
+            return True
+        else:
+            return False
