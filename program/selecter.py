@@ -55,9 +55,17 @@ def by_exec_date(execution_date: datetime, engine):
 
 
 def unchecked_tasks(engine):
-    """Returns a list of tuples with tasks that haven't been checked off"""
+    """Returns a list of tasks that haven't been checked off"""
     with Session(engine) as session:
         query = select(Tasks).where(Tasks.is_checked == False)
+        ans = session.execute(query).all()
+    return ans
+
+
+def checked_off_tasks(engine):
+    """Returns a list of tasks that have been checked off"""
+    with Session(engine) as session:
+        query = select(Tasks).where(Tasks.is_checked == True)
         ans = session.execute(query).all()
     return ans
 
