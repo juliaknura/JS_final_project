@@ -33,7 +33,7 @@ def get_category_list(engine):
 def by_category(cat_id, engine):
     """Returns a list of tuples with tasks with given category"""
     with Session(engine) as session:
-        query = select().select_from(Tasks).where(Tasks.cat_id == cat_id)
+        query = select(Tasks).where(Tasks.cat_id == cat_id)
         ans = session.execute(query).all()
     return ans
 
@@ -41,7 +41,7 @@ def by_category(cat_id, engine):
 def by_ddl(deadline: datetime, engine):
     """Returns a list of tuples with tasks with given deadline"""
     with Session(engine) as session:
-        query = select().select_from(Tasks).where(Tasks.deadline == deadline)
+        query = select(Tasks).where(Tasks.deadline == deadline)
         ans = session.execute(query).all()
     return ans
 
@@ -49,7 +49,7 @@ def by_ddl(deadline: datetime, engine):
 def by_exec_date(execution_date: datetime, engine):
     """Returns a list of tuples with tasks with given execution date"""
     with Session(engine) as session:
-        query = select().select_from(Tasks).where(Tasks.exec_date == execution_date)
+        query = select(Tasks).where(Tasks.exec_date == execution_date)
         ans = session.execute(query).all()
     return ans
 
@@ -57,7 +57,7 @@ def by_exec_date(execution_date: datetime, engine):
 def unchecked_tasks(engine):
     """Returns a list of tuples with tasks that haven't been checked off"""
     with Session(engine) as session:
-        query = select().select_from(Tasks).where(Tasks.is_checked == False)
+        query = select(Tasks).where(Tasks.is_checked == False)
         ans = session.execute(query).all()
     return ans
 
@@ -65,7 +65,7 @@ def unchecked_tasks(engine):
 def by_checked_off_date(checked_off_date: datetime, engine):
     """Returns a list of tuples with tasks that have been checked off at given day"""
     with Session(engine) as session:
-        query = select().select_from(Tasks).where(Tasks.checked_off_date == checked_off_date)
+        query = select(Tasks).where(Tasks.checked_off_date == checked_off_date)
         ans = session.execute(query).all()
     return ans
 
