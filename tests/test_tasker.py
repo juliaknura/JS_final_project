@@ -24,6 +24,21 @@ def test_add_delete_category():
     assert len(empty_categories) == 0
 
 
+def test_unique_category_handled():
+    # GIVEN
+    priorities = {0: 1, 1: 3, 2: 7}
+    suid = Tasker(priorities, 0)
+    cat_name = "inne"
+
+    # WHEN
+    added = suid.add_category(cat_name)
+    not_added = suid.add_category(cat_name)
+
+    assert added
+    assert not not_added
+    suid.delete_category(cat_name)
+
+
 @pytest.mark.parametrize("name, cat, desc, exec_date, ddl, subtasks", [
     ("odkurzyć", "domowe", "opis opis", datetime.datetime(2023, 7, 13), datetime.datetime(2023, 7, 15), []),
     ("pozamiatać", "domowe", None, None, None, []),
@@ -54,5 +69,52 @@ def test_add_delete_task(name, cat, desc, exec_date, ddl, subtasks):
 
     assert len(empty_tasks) == 0
 
-def test_add_delete_subtask():
-    ...
+
+@pytest.mark.parametrize("subtasks", [[], ["subtask1"], ["subtask1", "subtask2"]])
+def test_add_subtask(subtasks):
+    # GIVEN
+    cat = "other"
+    priorities = {0: 1, 1: 3, 2: 7}
+    suid = Tasker(priorities, 0)
+    suid.add_category(cat)
+
+    # WHEN
+    suid.add_task("task", cat, None, None, None, [])
+
+    suid.get_by_category(cat)
+    for subtask in subtasks:
+        suid.add_subtask(1, subtask)
+
+    suid.get_by_category(cat)
+    added_subtasks = suid.current_task_dict[1].subtasks.keys()
+
+    # THEN
+    assert len(added_subtasks) == len(subtasks)
+
+    for subtask in subtasks:
+        assert subtask in added_subtasks
+
+    suid.delete_task(1)
+    suid.delete_category(cat)
+
+
+def test_unique_subtask_handled():
+    # GIVEN
+    cat = "other"
+    subtask = "subtask"
+    priorities = {0: 1, 1: 3, 2: 7}
+    suid = Tasker(priorities, 0)
+    suid.add_category(cat)
+    suid.add_task("task", cat, None, None, None, [])
+
+    # WHEN
+    suid.get_by_category(cat)
+    added = suid.add_subtask(1, subtask)
+    not_added = suid.add_subtask(1, subtask)
+
+    # THEN
+    assert added
+    assert not not_added
+
+    suid.delete_task(1)
+    suid.delete_category(cat)

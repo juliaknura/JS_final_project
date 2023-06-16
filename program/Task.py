@@ -9,7 +9,7 @@ class Task:
 
     def __init__(self, task_id: int, name: str, cat: str, desc: Optional[str], exec_date: Optional[datetime],
                  deadline: Optional[datetime], is_checked: bool, checked_off_date: Optional[datetime],
-                 priority: int, subtasks: Optional[dict]):
+                 priority: int, subtasks: dict):
         self.task_id = task_id
         self.name = name
         self.cat = cat
