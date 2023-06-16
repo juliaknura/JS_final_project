@@ -10,6 +10,8 @@ from program.Tasker import Tasker
 from program.Task import Task
 import os
 from gui.checked_tasks_window import CheckedTasksWindow
+from gui.add_task_window import AddTaskWindow
+from gui.action_menu_window import ActionMenuWindow
 
 
 class AllTasksWindow(QWidget):
@@ -196,6 +198,8 @@ class AllTasksWindow(QWidget):
         self.tabs.tabBarClicked.connect(self.changed_category)
         self.back_button.clicked.connect(self.back_to_main_window)
         self.checked_tasks_button.clicked.connect(self.checked_tasks_window_show)
+        self.add_task_button.clicked.connect(self.add_task_window_show)
+        self.action_menu_button.clicked.connect(self.action_menu_window_show)
 
     def changed_category(self, index):
         self.name_field.setText(self.categories[index])
@@ -214,3 +218,11 @@ class AllTasksWindow(QWidget):
     def checked_tasks_window_show(self):
         self.checked_tasks_window = CheckedTasksWindow(self, self.tasker, self.settings)
         self.checked_tasks_window.show()
+
+    def add_task_window_show(self):
+        self.add_task_window = AddTaskWindow(self, self.tasker, self.settings, None)
+        self.add_task_window.show()
+
+    def action_menu_window_show(self):
+        self.action_menu_window = ActionMenuWindow(self, self.tasker, self.settings)
+        self.action_menu_window.show()

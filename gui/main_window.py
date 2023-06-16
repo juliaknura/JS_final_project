@@ -10,6 +10,8 @@ from program.Tasker import Tasker
 from program.Task import Task
 import os
 from gui.all_tasks_window import AllTasksWindow
+from gui.add_task_window import AddTaskWindow
+from gui.action_menu_window import ActionMenuWindow
 
 # for reference
 # class NewWindow(QWidget):
@@ -222,6 +224,8 @@ class MainWindow(QMainWindow):
 
         # add button functionalities
         self.all_tasks_button.clicked.connect(self.all_tasks_window_show)
+        self.new_task_button.clicked.connect(self.add_task_window_show)
+        self.action_menu_button.clicked.connect(self.action_menu_window_show)
 
     # for reference
     # def new_window_test(self):
@@ -231,6 +235,15 @@ class MainWindow(QMainWindow):
     def all_tasks_window_show(self):
         self.all_tasks_window = AllTasksWindow(self, self.tasker, self.settings)
         self.all_tasks_window.show()
+
+
+    def add_task_window_show(self):
+        self.add_task_window = AddTaskWindow(self, self.tasker, self.settings, None)
+        self.add_task_window.show()
+
+    def action_menu_window_show(self):
+        self.action_menu_window = ActionMenuWindow(self, self.tasker, self.settings)
+        self.action_menu_window.show()
 
 
     def update_window(self):

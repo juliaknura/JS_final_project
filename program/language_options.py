@@ -18,7 +18,15 @@ eng_dict = {
     "checked_tasks_window_title": "Checked tasks by date",
     "template_button": "Use as template",
     "choose_date_button": "Choose",
-    "date_label": "Choose the day on which the task was executed:"
+    "date_label": "Choose the day on which the task was executed:",
+    "add_tasks_window_title": "Add task",
+    "top_title_add_window": "ADD TASK",
+    "none_button": "none",
+    "action_menu_window_title": "Action menu",
+    "action_menu_title": "ACTION MENU",
+    "del_all_tasks_label": "Delete all checked off tasks",
+    "cat_label": "Manage categories",
+    "real_cat_label": "A cat"
 }
 
 pol_dict = {
@@ -41,7 +49,15 @@ pol_dict = {
     "checked_tasks_window_title": "Wykonane zadania z podziałem na dni",
     "template_button": "Wykorzystaj jako szablon",
     "choose_date_button": "Wybierz",
-    "date_label": "Wybierz dzień, w którym zadanie zostało wykonane:"
+    "date_label": "Wybierz dzień, w którym zadanie zostało wykonane:",
+    "add_tasks_window_title": "Dodaj zadanie",
+    "top_title_add_window": "DODAJ ZADANIE",
+    "none_button": "brak",
+    "action_menu_window_title": "Menu akcji",
+    "action_menu_title": "MENU AKCJI",
+    "del_all_tasks_label": "Usuń wszystkie wykonane zadania",
+    "cat_label": "Zarządzaj kategoriami",
+    "real_cat_label": "Kot"
 }
 
 silly_dict = {
@@ -64,7 +80,15 @@ silly_dict = {
     "checked_tasks_window_title": "Spełnione questy",
     "template_button": "Wykorzystaj jako szablon TY LENIU",
     "choose_date_button": "DAWAAAAAJ",
-    "date_label": "Wybierz dzień, w którym quest został odwalony:"
+    "date_label": "Wybierz dzień, w którym quest został odwalony:",
+    "add_tasks_window_title": "Dodaj questa",
+    "top_title_add_window": "DODAJ QUESTA",
+    "none_button": "po co to komu",
+    "action_menu_window_title": "Funky akcje",
+    "action_menu_title": "FUNKY AKCJE",
+    "del_all_tasks_label": "Abort wszystkie odwalone sidequesty",
+    "cat_label": "Weź ogarnij te kategorie",
+    "real_cat_label": "*inhales* KOT"
 }
 
 language_options = {
