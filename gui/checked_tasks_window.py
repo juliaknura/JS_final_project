@@ -9,6 +9,7 @@ from program.Settings import Settings
 from program.Tasker import Tasker
 from program.Task import Task
 import os
+from gui.add_task_window import AddTaskWindow
 
 
 class CheckedTasksWindow(QWidget):
@@ -192,8 +193,16 @@ class CheckedTasksWindow(QWidget):
 
         # button events
         self.back_button.clicked.connect(self.back_to_main_window)
+        self.add_task_button.clicked.connect(self.add_task_window_show)
 
     def back_to_main_window(self):
         self.parent_widget.update_window()
         self.parent_widget.show()
         self.hide()
+
+    def add_task_window_show(self):
+        self.add_task_window = AddTaskWindow(self, self.tasker, self.settings, None)
+        self.add_task_window.show()
+
+    def update_window(self):
+        print("checked tasks window updated")

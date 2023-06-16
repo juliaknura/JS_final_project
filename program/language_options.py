@@ -18,7 +18,10 @@ eng_dict = {
     "checked_tasks_window_title": "Checked tasks by date",
     "template_button": "Use as template",
     "choose_date_button": "Choose",
-    "date_label": "Choose the day on which the task was executed:"
+    "date_label": "Choose the day on which the task was executed:",
+    "add_tasks_window_title": "Add task",
+    "top_title_add_window": "ADD TASK",
+    "none_button": "none"
 }
 
 pol_dict = {
@@ -41,7 +44,10 @@ pol_dict = {
     "checked_tasks_window_title": "Wykonane zadania z podziałem na dni",
     "template_button": "Wykorzystaj jako szablon",
     "choose_date_button": "Wybierz",
-    "date_label": "Wybierz dzień, w którym zadanie zostało wykonane:"
+    "date_label": "Wybierz dzień, w którym zadanie zostało wykonane:",
+    "add_tasks_window_title": "Dodaj zadanie",
+    "top_title_add_window": "DODAJ ZADANIE",
+    "none_button": "brak"
 }
 
 silly_dict = {
@@ -64,7 +70,10 @@ silly_dict = {
     "checked_tasks_window_title": "Spełnione questy",
     "template_button": "Wykorzystaj jako szablon TY LENIU",
     "choose_date_button": "DAWAAAAAJ",
-    "date_label": "Wybierz dzień, w którym quest został odwalony:"
+    "date_label": "Wybierz dzień, w którym quest został odwalony:",
+    "add_tasks_window_title": "Dodaj questa",
+    "top_title_add_window": "DODAJ QUESTA",
+    "none_button": "po co to komu"
 }
 
 language_options = {
