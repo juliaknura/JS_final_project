@@ -12,6 +12,8 @@ from program.Tasker import Tasker
 from program.Task import Task
 import os
 from gui.cat_window import CatWindow
+from gui.add_task_window import AddTaskWindow
+from gui.manage_categories_window import ManageCategoriesWindow
 
 
 class ActionMenuWindow(QWidget):
@@ -74,7 +76,7 @@ class ActionMenuWindow(QWidget):
         self.back_button.setText(self.language_dict["back_button"])
 
         self.add_task_button = QPushButton()
-        self.add_task_button.setIcon(QIcon(os.getcwd()+os.sep+"gui"+os.sep+"plus_icon.png"))
+        self.add_task_button.setIcon(QIcon(os.getcwd() + os.sep + "gui" + os.sep + "plus_icon.png"))
         self.add_task_button.setIconSize(QSize(50, 50))
         self.add_task_button.setFixedSize(60, 60)
         self.add_task_button.show()
@@ -150,13 +152,25 @@ class ActionMenuWindow(QWidget):
         # button events
         self.back_button.clicked.connect(self.back_to_main_window)
         self.the_real_cats_button.clicked.connect(self.cat_window_show)
-
+        self.add_task_button.clicked.connect(self.add_task_window_show)
+        self.cats_button.clicked.connect(self.manage_categories_window_show)
 
     def back_to_main_window(self):
         self.parent_widget.update_window()
         self.parent_widget.show()
         self.hide()
 
+    def update_window(self):
+        print("action menu was updated")
+
     def cat_window_show(self):
         self.cat_window = CatWindow(self, self.tasker, self.settings)
         self.cat_window.show()
+
+    def add_task_window_show(self):
+        self.add_task_window = AddTaskWindow(self, self.tasker, self.settings, None)
+        self.add_task_window.show()
+
+    def manage_categories_window_show(self):
+        self.manage_categories_window = ManageCategoriesWindow(self, self.tasker, self.settings)
+        self.manage_categories_window.show()
