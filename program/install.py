@@ -1,15 +1,15 @@
 from sqlalchemy import create_engine
 
-import db_tables as db
+from program.db_tables import db, Base
 
 
 def create_database(db_name):
-    engine = create_engine(f"sqlite:///{db_name}.db", echo=True) #TODO silence
-    db.Base.metadata.create_all(engine)
+    engine = create_engine(db_name, echo=True) #TODO silence
+    Base.metadata.create_all(engine)
 
 
 def install():
-    create_database(db.db_name)
+    create_database(db)
 
 
 if __name__ == '__main__':
