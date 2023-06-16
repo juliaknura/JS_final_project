@@ -29,7 +29,22 @@ eng_dict = {
     "real_cat_label": "A cat",
     "add_category_button": "Add category",
     "delete_category_button": "Delete category",
-    "category_window_title": "MANAGE CATEGORIES"
+    "category_window_title": "MANAGE CATEGORIES",
+    "settings_window_title": "Settings",
+    "english": "english",
+    "polish": "polish",
+    "silly": "silly",
+    "high": "high",
+    "medium": "medium",
+    "low": "low",
+    "settings_title": "SETTINGS",
+    "choose_language_option_label": "Choose language option:",
+    "choose_pr_lvl_time_windows_label": "Choose time windows (in days) for each priority level:",
+    "high_lvl_label": "high level:",
+    "med_lvl_label": "medium level:",
+    "low_lvl_label": "low level:",
+    "choose_pr_lvl_daily_label": "Choose priority level to display on daily:",
+    "save_button": "Save"
 }
 
 pol_dict = {
@@ -63,7 +78,22 @@ pol_dict = {
     "real_cat_label": "Kot",
     "add_category_button": "Dodaj kategorię",
     "delete_category_button": "Usuń kategorię",
-    "category_window_title": "ZARZĄDZAJ KATEGORIAMI"
+    "category_window_title": "ZARZĄDZAJ KATEGORIAMI",
+    "settings_window_title": "Ustawienia",
+    "english": "angielski",
+    "polish": "polski",
+    "silly": "beka",
+    "high": "wysoki",
+    "medium": "średni",
+    "low": "niski",
+    "settings_title": "USTAWIENIA",
+    "choose_language_option_label": "Wybierz wersję językową:",
+    "choose_pr_lvl_time_windows_label": "Wybiesz przedziały czasowe (w dniach) dla każdego poziomu priorytetu:",
+    "high_lvl_label": "wysoki poziom:",
+    "med_lvl_label": "średni poziom:",
+    "low_lvl_label": "niski poziom:",
+    "choose_pr_lvl_daily_label": "Wybierz poziom priorytetu do uwzględnienia w liście \"na dziś\":",
+    "save_button": "Zapisz"
 }
 
 silly_dict = {
@@ -97,7 +127,22 @@ silly_dict = {
     "real_cat_label": "*inhales* KOT",
     "add_category_button": "Dawaj nową",
     "delete_category_button": "Wywal tą",
-    "category_window_title": "OGARNIJ TE KATEGORIE"
+    "category_window_title": "OGARNIJ TE KATEGORIE",
+    "settings_window_title": "Wajchy, pokrętła i inne",
+    "english": "brytole",
+    "polish": "polaczki",
+    "silly": "BEKA",
+    "high": "oj ciężko byczku",
+    "medium": "lepiej",
+    "low": "aaah, chill",
+    "settings_title": "USTAWIENIA",
+    "choose_language_option_label": "Wybierz język:",
+    "choose_pr_lvl_time_windows_label": "Wybiesz (w dniach) jak bardzo masz panikować:",
+    "high_lvl_label": "poziom \"oj ciężko byczku\":",
+    "med_lvl_label": "poziom \"lepiej\":",
+    "low_lvl_label": "poziom \"aaah, chill\":",
+    "choose_pr_lvl_daily_label": "Wybierz poziom priorytetu na daily:",
+    "save_button": "Zapisz"
 }
 
 language_options = {
