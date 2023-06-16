@@ -28,8 +28,8 @@ class AddTaskWindow(QWidget):
         self.parent_widget.hide()
 
         # language settings
-        # self.language_setting = self.settings.language_option
-        self.language_setting = "silly"
+        self.language_setting = self.settings.language_option
+        # self.language_setting = "silly"
         self.language_dict = language_options[self.language_setting]
         # TODO - to pewnie lepiej bedzie potem wyszczegolnic do funkcji
 
@@ -41,10 +41,11 @@ class AddTaskWindow(QWidget):
         # widgets
         self.main_widget = QWidget()
         self.top_widget = QWidget()
-        self.top_widget.setFixedSize(450,60)
+        self.top_widget.setFixedSize(450, 60)
         self.content_widget = QWidget()
         self.deadline_widget = QWidget()
         self.exec_date_widget = QWidget()
+        self.subtasks_button_widget = QWidget()
 
         # layouts
         self.main_layout = QVBoxLayout()
@@ -62,6 +63,9 @@ class AddTaskWindow(QWidget):
         self.exec_date_layout = QHBoxLayout()
         self.exec_date_widget.setLayout(self.exec_date_layout)
 
+        self.subtasks_button_layout = QHBoxLayout()
+        self.subtasks_button_widget.setLayout(self.subtasks_button_layout)
+
 
         # buttons
         self.back_button = QPushButton()
@@ -70,6 +74,8 @@ class AddTaskWindow(QWidget):
         self.add_button.setText(self.language_dict["add_tasks_window_title"])
         self.new_subtask_button = QPushButton()
         self.new_subtask_button.setText(self.language_dict["new_subtask_button"])
+        self.delete_subtask_button = QPushButton()
+        self.delete_subtask_button.setText(self.language_dict["delete_subtask_button"])
         self.none_deadline = QRadioButton()
         self.none_deadline.setText(self.language_dict["none_button"])
         self.none_exec_date = QRadioButton()
@@ -132,9 +138,12 @@ class AddTaskWindow(QWidget):
         self.content_layout.addWidget(self.exec_date_widget)
         self.content_layout.addWidget(self.subtasks_label)
         self.content_layout.addWidget(self.subtask_list)
-        self.content_layout.addWidget(self.new_subtask_button)
+        self.content_layout.addWidget(self.subtasks_button_widget)
         self.content_layout.addWidget(self.add_button)
 
+        # arrange subtask button widget
+        self.subtasks_button_layout.addWidget(self.new_subtask_button)
+        self.subtasks_button_layout.addWidget(self.delete_subtask_button)
 
         # arrange deadline widget
         self.deadline_layout.addWidget(self.deadline_field)
