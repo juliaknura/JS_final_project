@@ -1,0 +1,3 @@
+def search(recipe_name):
+    """Returns a request if a recipe is found or None otherwise"""
+    ...

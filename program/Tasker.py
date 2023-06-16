@@ -1,11 +1,8 @@
 from typing import Optional
 
 from sqlalchemy.orm import Session
-
-from program import db_tables
-from program.selecter import by_ddl, by_category, by_checked_off_date, by_exec_date
 from program.selecter import by_ddl, by_category, by_checked_off_date, by_exec_date, \
-    get_category_name, get_category_list, get_category_id, unchecked_tasks, get_subtasks
+    get_category_name, get_category_list, get_category_id, unchecked_tasks, get_subtasks, checked_off_tasks
 from sqlalchemy import create_engine, update, delete
 from datetime import datetime, timedelta
 from program.db_tables import Tasks, Subtasks, Categories
@@ -151,32 +148,35 @@ class Tasker:
             session.commit()
 
     def add_subtask(self, task_id, subtask_name):
-        """Adds subtask locally and in the database"""
-        self.current_task_dict[task_id].add_subtask(subtask_name)
-        with Session(self.engine) as session:
-            subtask = Subtasks(parent_task_id=task_id, name=subtask_name, is_checked=False)
-            session.add(subtask)
-            session.commit()
+        """Adds subtask locally and in the database. One task can have only one subtask with the same name.
+        Return True if succeeded, False otherwise"""
+        if subtask_name not in self.current_task_dict[task_id].subtasks.keys():
+            self.current_task_dict[task_id].add_subtask(subtask_name)
+            with Session(self.engine) as session:
+                subtask = Subtasks(parent_task_id=task_id, name=subtask_name, is_checked=False)
+                session.add(subtask)
+                session.commit()
+                return True
+        else:
+            return False
 
     def delete_task(self, task_id):
         """Deletes given task locally and in the database"""
         del self.current_task_dict[task_id]
-        """query1 = (delete(Subtasks)
-                  .where(Subtasks.parent_task_id == task_id))
-        """
-        query2 = (delete(Tasks)
-                  .where(Tasks.task_id == task_id))
 
-        with self.engine.begin() as conn:
-            # conn.execute(query1)
-            conn.execute(query2)
+        with Session(self.engine) as session:
+            task = session.get(Tasks, task_id)
+            session.delete(task)
+            session.commit()
 
     def delete_all_checked_off(self):
         "Deletes all tasks in the database that have been checked off"
-        query = delete(Subtasks).where(Subtasks.checked_off == True)
+        to_del = checked_off_tasks(self.engine)
 
-        with self.engine.begin() as conn:
-            conn.execute(query)
+        with Session(self.engine) as session:
+            for task in to_del:
+                session.delete(task)
+            session.commit()
 
     def delete_subtask(self, task_id, subtask_name):
         """Deletes a given subtask locally and in the database"""
@@ -212,13 +212,24 @@ class Tasker:
             conn.execute(query)
 
     def add_category(self, cat_name):
-        with Session(self.engine) as session:
-            cat = Categories(name=cat_name)
-            session.add(cat)
-            session.commit()
+        """Add category if it isn't already added. Return True if succeeded, False otherwise"""
+        if get_category_id(cat_name, self.engine) is None:
+            with Session(self.engine) as session:
+                cat = Categories(name=cat_name)
+                session.add(cat)
+                session.commit()
+                return True
+        else:
+            return False
 
     def delete_category(self, cat_name):
-        query = delete(Categories).where(Categories.name == cat_name)
+        """Delete category if there aren't any tasks with it. Return True if succeeded, False otherwise"""
+        if len(by_category(cat_name, self.engine)) == 0:
+            query = delete(Categories).where(Categories.name == cat_name)
 
-        with self.engine.begin() as conn:
-            conn.execute(query)
+            with self.engine.begin() as conn:
+                conn.execute(query)
+
+            return True
+        else:
+            return False
