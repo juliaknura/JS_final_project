@@ -2,7 +2,7 @@ import datetime
 from typing import List, Optional
 
 from sqlalchemy import ForeignKey
-from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column, relationship
+from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column, relationship, backref
 
 db_file_name = "app_data"
 db = f"sqlite:///{db_file_name}.db"
@@ -25,8 +25,8 @@ class Tasks(Base):
     checked_off_date: Mapped[Optional[datetime.datetime]]
 
     category: Mapped["Categories"] = relationship(back_populates="tasks")
-    subtasks: Mapped[List["Subtasks"]] = relationship(back_populates="parent", cascade="all, delete")
-
+    subtasks: Mapped[List["Subtasks"]] = relationship(back_populates="parent_task",
+                                                      cascade="all, delete-orphan")
 
 class Categories(Base):
     __tablename__ = "categories"
@@ -44,5 +44,5 @@ class Subtasks(Base):
     is_checked: Mapped[bool]
     parent_task_id: Mapped[int] = mapped_column(ForeignKey("tasks.task_id"))
 
-    parent: Mapped["Tasks"] = relationship(back_populates="subtasks")
+    parent_task: Mapped["Tasks"] = relationship(back_populates="subtasks")
     __mapper_args__ = {"primary_key": [parent_task_id, name]}
