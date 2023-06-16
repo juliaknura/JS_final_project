@@ -26,7 +26,10 @@ eng_dict = {
     "action_menu_title": "ACTION MENU",
     "del_all_tasks_label": "Delete all checked off tasks",
     "cat_label": "Manage categories",
-    "real_cat_label": "A cat"
+    "real_cat_label": "A cat",
+    "add_category_button": "Add category",
+    "delete_category_button": "Delete category",
+    "category_window_title": "MANAGE CATEGORIES"
 }
 
 pol_dict = {
@@ -57,7 +60,10 @@ pol_dict = {
     "action_menu_title": "MENU AKCJI",
     "del_all_tasks_label": "Usuń wszystkie wykonane zadania",
     "cat_label": "Zarządzaj kategoriami",
-    "real_cat_label": "Kot"
+    "real_cat_label": "Kot",
+    "add_category_button": "Dodaj kategorię",
+    "delete_category_button": "Usuń kategorię",
+    "category_window_title": "ZARZĄDZAJ KATEGORIAMI"
 }
 
 silly_dict = {
@@ -88,7 +94,10 @@ silly_dict = {
     "action_menu_title": "FUNKY AKCJE",
     "del_all_tasks_label": "Abort wszystkie odwalone sidequesty",
     "cat_label": "Weź ogarnij te kategorie",
-    "real_cat_label": "*inhales* KOT"
+    "real_cat_label": "*inhales* KOT",
+    "add_category_button": "Dawaj nową",
+    "delete_category_button": "Wywal tą",
+    "category_window_title": "OGARNIJ TE KATEGORIE"
 }
 
 language_options = {
