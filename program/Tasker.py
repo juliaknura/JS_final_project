@@ -118,7 +118,7 @@ class Tasker:
     def _calculate_priority(self, deadline_date: Optional[datetime]):
         """Calculates the number of days left until the deadline (rounds up) and returns priority category"""
         if deadline_date is None:
-            return 2
+            return 3
         else:
             normalized_today = datetime.now().replace(hour=0, minute=0, second=0, microsecond=0)
             days_diff = (deadline_date - normalized_today).days
@@ -131,6 +131,8 @@ class Tasker:
                 return 1
             elif days_diff <= far_bar:
                 return 2
+            else:
+                return 3
 
     def add_task(self, name: str, cat: str, desc: str, exec_date: datetime, deadline: datetime, subtasks: list):
         """Adds a new task to the database"""
