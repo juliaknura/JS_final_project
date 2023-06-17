@@ -155,6 +155,7 @@ class ActionMenuWindow(QWidget):
         self.the_real_cats_button.clicked.connect(self.cat_window_show)
         self.add_task_button.clicked.connect(self.add_task_window_show)
         self.cats_button.clicked.connect(self.manage_categories_window_show)
+        self.del_all_tasks_button.clicked.connect(self.delete_all_tasks)
 
     def back_to_main_window(self):
         self.parent_widget.update_window()
@@ -175,6 +176,9 @@ class ActionMenuWindow(QWidget):
     def manage_categories_window_show(self):
         self.manage_categories_window = ManageCategoriesWindow(self, self.tasker, self.settings)
         self.manage_categories_window.show()
+
+    def delete_all_tasks(self):
+        pass
 
     def closeEvent(self, a0: QtGui.QCloseEvent):
         self.back_to_main_window()

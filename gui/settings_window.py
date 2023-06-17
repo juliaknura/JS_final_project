@@ -162,11 +162,15 @@ class SettingsWindow(QWidget):
 
         # button events
         self.back_button.clicked.connect(self.back_to_main_window)
+        self.save_button.clicked.connect(self.save_settings)
 
     def back_to_main_window(self):
         self.parent_widget.update_window()
         self.parent_widget.show()
         self.hide()
+
+    def save_settings(self):
+        ...
 
     def closeEvent(self, a0: QtGui.QCloseEvent):
         self.back_to_main_window()

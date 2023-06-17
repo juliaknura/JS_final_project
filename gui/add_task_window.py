@@ -155,9 +155,11 @@ class AddTaskWindow(QWidget):
         self.exec_date_layout.addWidget(self.exec_date_field)
         self.exec_date_layout.addWidget(self.none_exec_date)
 
+        # button events
         self.back_button.clicked.connect(self.back_to_main_window)
         self.new_subtask_button.clicked.connect(self.add_subtask_window_show)
         self.add_button.clicked.connect(self.add_button_event)
+        self.delete_subtask_button.clicked.connect(self.delete_subtask)
 
 
 
@@ -195,6 +197,9 @@ class AddTaskWindow(QWidget):
 
     def msg_button_click(self,i):
         print("Button clicked is:", i.text())
+
+    def delete_subtask(self):
+        pass
 
     def closeEvent(self, a0: QtGui.QCloseEvent):
         self.back_to_main_window()
