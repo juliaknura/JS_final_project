@@ -48,8 +48,8 @@ class MainWindow(QMainWindow):
         self.settings = mw_settings
 
         # language settings
-        # self.language_setting = self.settings.language_option
-        self.language_setting = "polish"
+        self.language_setting = self.settings.language_option
+        # self.language_setting = "polish"
         self.language_dict = language_options[self.language_setting]
         # TODO - to pewnie lepiej bedzie potem wyszczegolnic do funkcji
 
@@ -251,6 +251,8 @@ class MainWindow(QMainWindow):
         self.action_menu_button.clicked.connect(self.action_menu_window_show)
         self.settings_button.clicked.connect(self.settings_window_show)
         self.new_subtask_button.clicked.connect(self.add_subtask_window_show)
+        self.delete_subtask_button.clicked.connect(self.delete_subtask)
+        self.delete_task_button.clicked.connect(self.delete_task)
 
     # for reference
     # def new_window_test(self):
@@ -260,7 +262,6 @@ class MainWindow(QMainWindow):
     def all_tasks_window_show(self):
         self.all_tasks_window = AllTasksWindow(self, self.tasker, self.settings)
         self.all_tasks_window.show()
-
 
     def add_task_window_show(self):
         self.add_task_window = AddTaskWindow(self, self.tasker, self.settings, None)
@@ -278,6 +279,11 @@ class MainWindow(QMainWindow):
         self.settings_window = SettingsWindow(self, self.tasker, self.settings)
         self.settings_window.show()
 
+    def delete_subtask(self):
+        pass
+
+    def delete_task(self):
+        pass
 
     def update_window(self):
         # updates just in case things have changed in other views
