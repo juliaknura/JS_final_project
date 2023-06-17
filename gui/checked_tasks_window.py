@@ -221,6 +221,8 @@ class CheckedTasksWindow(QWidget):
         self.add_task_button.clicked.connect(self.add_task_window_show)
         self.action_menu_button.clicked.connect(self.action_menu_window_show)
         self.settings_button.clicked.connect(self.settings_window_show)
+        self.template_button.clicked.connect(self.choose_as_template)
+        self.choose_date_button.clicked.connect(self.choose_date)
 
     def back_to_main_window(self):
         self.parent_widget.update_window()
@@ -238,6 +240,12 @@ class CheckedTasksWindow(QWidget):
     def settings_window_show(self):
         self.settings_window = SettingsWindow(self, self.tasker, self.settings)
         self.settings_window.show()
+
+    def choose_as_template(self):
+        pass
+
+    def choose_date(self):
+        pass
 
     def update_window(self):
         print("checked tasks window updated")

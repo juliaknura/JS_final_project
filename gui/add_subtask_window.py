@@ -58,7 +58,7 @@ class AddSubtaskWindow(QWidget):
 
         self.add_subtask_button = QPushButton()
         self.add_subtask_button.setText(self.language_dict["new_subtask_button"])
-        self.add_subtask_button.setFixedSize(120, 27)
+        self.add_subtask_button.setFixedSize(150, 27)
 
         # fields
         self.subtask_name_field = QLineEdit()
