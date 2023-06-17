@@ -13,6 +13,7 @@ from gui.all_tasks_window import AllTasksWindow
 from gui.add_task_window import AddTaskWindow
 from gui.action_menu_window import ActionMenuWindow
 from gui.settings_window import SettingsWindow
+from gui.add_subtask_window import AddSubtaskWindow
 
 # for reference
 # class NewWindow(QWidget):
@@ -228,6 +229,7 @@ class MainWindow(QMainWindow):
         self.new_task_button.clicked.connect(self.add_task_window_show)
         self.action_menu_button.clicked.connect(self.action_menu_window_show)
         self.settings_button.clicked.connect(self.settings_window_show)
+        self.new_subtask_button.clicked.connect(self.add_subtask_window_show)
 
     # for reference
     # def new_window_test(self):
@@ -242,6 +244,10 @@ class MainWindow(QMainWindow):
     def add_task_window_show(self):
         self.add_task_window = AddTaskWindow(self, self.tasker, self.settings, None)
         self.add_task_window.show()
+
+    def add_subtask_window_show(self):
+        self.add_subtask_window = AddSubtaskWindow(self, self.tasker, self.settings)
+        self.add_subtask_window.show()
 
     def action_menu_window_show(self):
         self.action_menu_window = ActionMenuWindow(self, self.tasker, self.settings)
