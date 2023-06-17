@@ -1,6 +1,8 @@
 from typing import Optional
 
 from sqlalchemy.orm import Session
+
+from program import ania_mode
 from program.selecter import by_ddl, by_category, by_checked_off_date, by_exec_date, \
     get_category_name, get_category_list, get_category_id, unchecked_tasks, get_subtasks, checked_off_tasks
 from sqlalchemy import create_engine, update, delete
@@ -134,9 +136,9 @@ class Tasker:
             else:
                 return 3
 
+    @ania_mode.add_task_with_ania_mode
     def add_task(self, name: str, cat: str, desc: str, exec_date: datetime, deadline: datetime, subtasks: list):
         """Adds a new task to the database"""
-        task_priority = self._calculate_priority(deadline)
         cat_id = get_category_id(cat, self.engine)[0]
         with Session(self.engine) as session:
             task = Tasks(name=name, cat_id=cat_id, task_desc=desc, exec_date=exec_date,
@@ -209,6 +211,17 @@ class Tasker:
                  .where(Subtasks.parent_task_id == task_id)
                  .where(Subtasks.name == subtask_name)
                  .values(is_checked=task.subtasks[subtask_name]))
+
+        with self.engine.begin() as conn:
+            conn.execute(query)
+
+    def modify_task_desc(self, task_id, new_desc):
+        """Change task description"""
+        task = self.current_task_dict[task_id]
+        task.desc = new_desc
+        query = (update(Tasks)
+                 .where(Tasks.task_id == task_id)
+                 .values(task_desc=new_desc))
 
         with self.engine.begin() as conn:
             conn.execute(query)
