@@ -13,6 +13,7 @@ from gui.all_tasks_window import AllTasksWindow
 from gui.add_task_window import AddTaskWindow
 from gui.action_menu_window import ActionMenuWindow
 from gui.settings_window import SettingsWindow
+from gui.add_subtask_window import AddSubtaskWindow
 
 # for reference
 # class NewWindow(QWidget):
@@ -70,6 +71,9 @@ class MainWindow(QMainWindow):
         self.task_details_widget = QWidget()
         self.task_actions_widget = QWidget()
 
+        self.deadline_widget = QWidget()
+        self.exec_date_widget = QWidget()
+
         # layouts
         self.main_layout = QVBoxLayout()
         self.top_layout = QHBoxLayout()
@@ -85,6 +89,9 @@ class MainWindow(QMainWindow):
         self.task_details_layout = QVBoxLayout()
         self.task_actions_layout = QHBoxLayout()
 
+        self.deadline_layout = QHBoxLayout()
+        self.exec_date_layout = QHBoxLayout()
+
         # text labels
         self.task_name_label = QLabel(self.language_dict["task_name_label"])
         self.task_cat_label = QLabel(self.language_dict["task_cat_label"])
@@ -97,6 +104,10 @@ class MainWindow(QMainWindow):
         font.setBold(True)
         font.setPointSize(20)
         self.daily_title_label.setFont(font)
+        # self.none_label = QLabel(self.language_dict["none_label"])
+        # self.none_label2 = QLabel(self.language_dict["none_label"])
+        self.none_label = QLabel("")
+        self.none_label2 = QLabel("")
 
         # images
         logo_pixMap = QPixmap(os.getcwd()+os.sep+"gui"+os.sep+"task_manager.png")
@@ -116,7 +127,7 @@ class MainWindow(QMainWindow):
         self.all_tasks_button.setFixedSize(360, 80)
         self.settings_button = QPushButton()
         self.settings_button.setIcon(QIcon(os.getcwd()+os.sep+"gui"+os.sep+"settings.png"))
-        self.settings_button.setIconSize(QSize(70,70))
+        self.settings_button.setIconSize(QSize(70, 70))
         self.settings_button.setFixedSize(80, 80)
         self.settings_button.show()
         self.new_task_button = QPushButton()
@@ -210,12 +221,22 @@ class MainWindow(QMainWindow):
         self.task_details_layout.addWidget(self.task_desc_label)
         self.task_details_layout.addWidget(self.desc_field)
         self.task_details_layout.addWidget(self.task_deadline_label)
-        self.task_details_layout.addWidget(self.deadline_field)
+        self.task_details_layout.addWidget(self.deadline_widget)
         self.task_details_layout.addWidget(self.task_exec_date_label)
-        self.task_details_layout.addWidget(self.exec_date_field)
+        self.task_details_layout.addWidget(self.exec_date_widget)
         self.task_details_layout.addWidget(self.subtasks_label)
         self.task_details_layout.addWidget(self.subtask_list)
         self.task_details_widget.setLayout(self.task_details_layout)
+
+        # arrange deadline widget
+        self.deadline_layout.addWidget(self.deadline_field)
+        self.deadline_layout.addWidget(self.none_label)
+        self.deadline_widget.setLayout(self.deadline_layout)
+
+        # arrange exec date widget
+        self.exec_date_layout.addWidget(self.exec_date_field)
+        self.exec_date_layout.addWidget(self.none_label2)
+        self.exec_date_widget.setLayout(self.exec_date_layout)
 
         # arrange task actions widget
         self.task_actions_layout.addWidget(self.new_subtask_button)
@@ -228,6 +249,7 @@ class MainWindow(QMainWindow):
         self.new_task_button.clicked.connect(self.add_task_window_show)
         self.action_menu_button.clicked.connect(self.action_menu_window_show)
         self.settings_button.clicked.connect(self.settings_window_show)
+        self.new_subtask_button.clicked.connect(self.add_subtask_window_show)
 
     # for reference
     # def new_window_test(self):
@@ -242,6 +264,10 @@ class MainWindow(QMainWindow):
     def add_task_window_show(self):
         self.add_task_window = AddTaskWindow(self, self.tasker, self.settings, None)
         self.add_task_window.show()
+
+    def add_subtask_window_show(self):
+        self.add_subtask_window = AddSubtaskWindow(self, self.tasker, self.settings)
+        self.add_subtask_window.show()
 
     def action_menu_window_show(self):
         self.action_menu_window = ActionMenuWindow(self, self.tasker, self.settings)

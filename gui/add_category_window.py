@@ -4,15 +4,9 @@ from PyQt5.QtGui import QPixmap, QIcon, QFont
 from PyQt5.QtCore import QRect, QSize, Qt
 from pyqt_checkbox_list_widget.checkBoxListWidget import CheckBoxListWidget
 from program.language_options import language_options
-import sys
-from program.Settings import Settings
-from program.Tasker import Tasker
-from program.Task import Task
-import os
-from gui.add_category_window import AddCategoryWindow
 
 
-class ManageCategoriesWindow(QWidget):
+class AddCategoryWindow(QWidget):
 
     def __init__(self, parent, tasker, settings):
         super().__init__()
@@ -20,7 +14,6 @@ class ManageCategoriesWindow(QWidget):
         self.parent_widget = parent
         self.tasker = tasker
         self.settings = settings
-        self.category_list = self.get_categories()
 
         # hide parent window
         self.parent_widget.hide()
@@ -32,15 +25,13 @@ class ManageCategoriesWindow(QWidget):
         # TODO - to pewnie lepiej bedzie potem wyszczegolnic do funkcji
 
         # main window properties
-        self.setWindowTitle(self.language_dict["cat_label"])
-        self.setGeometry(100, 100, 550, 400)
+        self.setWindowTitle(self.language_dict["add_category_button"])
+        self.setGeometry(100, 100, 450, 200)
 
         # widgets
         self.main_widget = QWidget()
         self.top_widget = QWidget()
-        self.top_widget.setFixedSize(550, 50)
         self.content_widget = QWidget()
-        self.button_widget = QWidget()
 
         # layouts
         self.main_layout = QVBoxLayout()
@@ -52,27 +43,24 @@ class ManageCategoriesWindow(QWidget):
         self.content_layout = QVBoxLayout()
         self.content_widget.setLayout(self.content_layout)
 
-        self.button_layout = QHBoxLayout()
-        self.button_widget.setLayout(self.button_layout)
-
-        # buttons
-        self.back_button = QPushButton()
-        self.back_button.setText(self.language_dict["back_button"])
-        self.add_category_button = QPushButton()
-        self.add_category_button.setText(self.language_dict["add_category_button"])
-        self.delete_category_button = QPushButton()
-        self.delete_category_button.setText(self.language_dict["delete_category_button"])
-
-        # list widget
-        self.cat_list_widget = QListWidget()
-        self.cat_list_widget.addItems(self.category_list)
-
-        # label
-        self.title_label = QLabel(self.language_dict["category_window_title"])
+        # labels
+        self.title_label = QLabel(self.language_dict["add_category_title"])
         font = self.title_label.font()
         font.setBold(True)
         font.setPointSize(20)
         self.title_label.setFont(font)
+        self.insert_new_category_name_label = QLabel(self.language_dict["insert_new_category_name_label"])
+
+        # buttons
+        self.back_button = QPushButton()
+        self.back_button.setText(self.language_dict["back_button"])
+
+        self.add_category_button = QPushButton()
+        self.add_category_button.setText(self.language_dict["add_category_button"])
+        self.add_category_button.setFixedSize(120, 27)
+
+        # fields
+        self.category_name_field = QLineEdit()
 
         # spacer
         self.spacer = QSpacerItem(80, 1, QSizePolicy.Minimum, QSizePolicy.Expanding)
@@ -92,28 +80,18 @@ class ManageCategoriesWindow(QWidget):
         self.top_layout.addWidget(self.title_label)
 
         # arrange content widget
-        self.content_layout.addWidget(self.cat_list_widget)
-        self.content_layout.addWidget(self.button_widget)
-
-        # arrange button widget
-        self.button_layout.addWidget(self.add_category_button)
-        self.button_layout.addWidget(self.delete_category_button)
+        self.content_layout.addWidget(self.insert_new_category_name_label)
+        self.content_layout.addWidget(self.category_name_field)
+        self.content_layout.addWidget(self.add_category_button, alignment=Qt.AlignCenter)
 
         # button events
         self.back_button.clicked.connect(self.back_to_main_window)
-        self.add_category_button.clicked.connect(self.add_category_window_show)
-
-    def get_categories(self):
-        return ["k1", "k2", "k3"]
+        self.add_category_button.clicked.connect(self.add_category)
 
     def back_to_main_window(self):
         self.parent_widget.update_window()
         self.parent_widget.show()
         self.hide()
 
-    def update_window(self):
-        pass
-
-    def add_category_window_show(self):
-        self.add_category_window = AddCategoryWindow(self, self.tasker, self.settings)
-        self.add_category_window.show()
+    def add_category(self):
+        print("category added")

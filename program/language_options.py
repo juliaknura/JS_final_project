@@ -44,7 +44,12 @@ eng_dict = {
     "med_lvl_label": "medium level:",
     "low_lvl_label": "low level:",
     "choose_pr_lvl_daily_label": "Choose priority level to display on daily:",
-    "save_button": "Save"
+    "save_button": "Save",
+    "add_subtask_title": "ADD SUBTASK",
+    "insert_new_subtask_name_label": "Name of the new subtask",
+    "add_category_title": "ADD CATEGORY",
+    "insert_new_category_name_label": "Name of the new category",
+    "none_label": "NONE"
 }
 
 pol_dict = {
@@ -93,7 +98,12 @@ pol_dict = {
     "med_lvl_label": "średni poziom:",
     "low_lvl_label": "niski poziom:",
     "choose_pr_lvl_daily_label": "Wybierz poziom priorytetu do uwzględnienia w liście \"na dziś\":",
-    "save_button": "Zapisz"
+    "save_button": "Zapisz",
+    "add_subtask_title": "DODAJ PODZADANIE",
+    "insert_new_subtask_name_label": "Nazwa nowego podzadania",
+    "add_category_title": "DODAJ KATEGORIĘ",
+    "insert_new_category_name_label": "Nazwa nowej kategorii",
+    "none_label": "BRAK"
 }
 
 silly_dict = {
@@ -142,7 +152,12 @@ silly_dict = {
     "med_lvl_label": "poziom \"lepiej\":",
     "low_lvl_label": "poziom \"aaah, chill\":",
     "choose_pr_lvl_daily_label": "Wybierz poziom priorytetu na daily:",
-    "save_button": "Zapisz"
+    "save_button": "Zapisz",
+    "add_subtask_title": "DODAJ SIDEQUESTA",
+    "insert_new_subtask_name_label": "Nazwa nowego sidequesta",
+    "add_category_title": "DAWAJ NOWĄ",
+    "insert_new_category_name_label": "Nazwa nowej kategorii",
+    "none_label": "NIE MA"
 }
 
 language_options = {

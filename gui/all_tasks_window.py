@@ -13,6 +13,7 @@ from gui.checked_tasks_window import CheckedTasksWindow
 from gui.add_task_window import AddTaskWindow
 from gui.action_menu_window import ActionMenuWindow
 from gui.settings_window import SettingsWindow
+from gui.add_subtask_window import AddSubtaskWindow
 
 
 class AllTasksWindow(QWidget):
@@ -54,6 +55,9 @@ class AllTasksWindow(QWidget):
         self.right_buttons_widget = QWidget()
         self.right_buttons_widget.setFixedSize(350, 60)
 
+        self.deadline_widget = QWidget()
+        self.exec_date_widget = QWidget()
+
         # layouts
         self.main_layout = QVBoxLayout()
         self.main_widget.setLayout(self.main_layout)
@@ -84,6 +88,12 @@ class AllTasksWindow(QWidget):
 
         self.right_buttons_layout = QHBoxLayout()
         self.right_buttons_widget.setLayout(self.right_buttons_layout)
+
+        self.deadline_layout = QHBoxLayout()
+        self.deadline_widget.setLayout(self.deadline_layout)
+
+        self.exec_date_layout = QHBoxLayout()
+        self.exec_date_widget.setLayout(self.exec_date_layout)
 
         # buttons
         self.back_button = QPushButton()
@@ -130,6 +140,11 @@ class AllTasksWindow(QWidget):
         self.task_deadline_label = QLabel(self.language_dict["task_deadline_label"])
         self.task_exec_date_label = QLabel(self.language_dict["task_exec_date_label"])
         self.subtasks_label = QLabel(self.language_dict["subtasks_label"])
+
+        # self.none_label = QLabel(self.language_dict["none_label"])
+        # self.none_label2 = QLabel(self.language_dict["none_label"])
+        self.none_label = QLabel("")
+        self.none_label2 = QLabel("")
 
         # tabs (there's so much code in there bc they're 'fake' tabs)
         number_of_tabs = len(self.categories)
@@ -184,11 +199,21 @@ class AllTasksWindow(QWidget):
         self.task_details_layout.addWidget(self.task_desc_label)
         self.task_details_layout.addWidget(self.desc_field)
         self.task_details_layout.addWidget(self.task_deadline_label)
-        self.task_details_layout.addWidget(self.deadline_field)
+        self.task_details_layout.addWidget(self.deadline_widget)
         self.task_details_layout.addWidget(self.task_exec_date_label)
-        self.task_details_layout.addWidget(self.exec_date_field)
+        self.task_details_layout.addWidget(self.exec_date_widget)
         self.task_details_layout.addWidget(self.subtasks_label)
         self.task_details_layout.addWidget(self.subtask_list)
+
+        # arrange deadline widget
+        self.deadline_layout.addWidget(self.deadline_field)
+        self.deadline_layout.addWidget(self.none_label)
+        self.deadline_widget.setLayout(self.deadline_layout)
+
+        # arrange exec date widget
+        self.exec_date_layout.addWidget(self.exec_date_field)
+        self.exec_date_layout.addWidget(self.none_label2)
+        self.exec_date_widget.setLayout(self.exec_date_layout)
 
         # arrange task actions widget
         self.task_actions_layout.addWidget(self.new_subtask_button)
@@ -202,6 +227,7 @@ class AllTasksWindow(QWidget):
         self.add_task_button.clicked.connect(self.add_task_window_show)
         self.action_menu_button.clicked.connect(self.action_menu_window_show)
         self.settings_button.clicked.connect(self.settings_window_show)
+        self.new_subtask_button.clicked.connect(self.add_subtask_window_show)
 
     def changed_category(self, index):
         self.name_field.setText(self.categories[index])
@@ -224,6 +250,10 @@ class AllTasksWindow(QWidget):
     def add_task_window_show(self):
         self.add_task_window = AddTaskWindow(self, self.tasker, self.settings, None)
         self.add_task_window.show()
+
+    def add_subtask_window_show(self):
+        self.add_subtask_window = AddSubtaskWindow(self, self.tasker, self.settings)
+        self.add_subtask_window.show()
 
     def action_menu_window_show(self):
         self.action_menu_window = ActionMenuWindow(self, self.tasker, self.settings)
