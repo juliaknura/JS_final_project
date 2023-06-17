@@ -1,9 +1,10 @@
 from typing import Optional
 
 from PyQt5.QtWidgets import QApplication, QMainWindow, QLabel, QWidget, QHBoxLayout, QVBoxLayout, \
-    QPushButton, QLineEdit, QDateEdit, QComboBox, QRadioButton, QListWidget, QSizePolicy, QSpacerItem
+    QPushButton, QLineEdit, QDateEdit, QComboBox, QRadioButton, QListWidget, QSizePolicy, QSpacerItem, QMessageBox
 from PyQt5.QtGui import QPixmap, QIcon, QFont
 from PyQt5.QtCore import QRect, QSize, Qt
+from PyQt5 import QtGui
 from pyqt_checkbox_list_widget.checkBoxListWidget import CheckBoxListWidget
 from program.language_options import language_options
 import sys
@@ -156,6 +157,7 @@ class AddTaskWindow(QWidget):
 
         self.back_button.clicked.connect(self.back_to_main_window)
         self.new_subtask_button.clicked.connect(self.add_subtask_window_show)
+        self.add_button.clicked.connect(self.add_button_event)
 
 
 
@@ -178,3 +180,23 @@ class AddTaskWindow(QWidget):
     def add_subtask_window_show(self):
         self.add_subtask_window = AddSubtaskWindow2(self, self.tasker, self.settings)
         self.add_subtask_window.show()
+
+    def add_button_event(self):
+        self.msg_box = QMessageBox()
+        self.msg_box.setText(self.language_dict["msg_box_text"])
+        self.msg_box.setWindowTitle(self.language_dict["msg_box_title"])
+        self.msg_box.setIconPixmap(QPixmap(os.getcwd() + os.sep + "gui" + os.sep + "question_mark.png"))
+        self.msg_box.setStandardButtons(QMessageBox.Yes | QMessageBox.No)
+
+        self.msg_box.buttonClicked.connect(self.msg_button_click)
+
+        self.msg_box.exec()
+
+
+    def msg_button_click(self,i):
+        print("Button clicked is:", i.text())
+
+    def closeEvent(self, a0: QtGui.QCloseEvent):
+        self.back_to_main_window()
+        a0.ignore()
+

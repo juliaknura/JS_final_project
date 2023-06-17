@@ -1,7 +1,8 @@
 from PyQt5.QtWidgets import QApplication, QMainWindow, QLabel, QWidget, QHBoxLayout, QVBoxLayout, \
-    QPushButton, QLineEdit, QDateEdit, QComboBox, QRadioButton, QListWidget, QSizePolicy, QSpacerItem
+    QPushButton, QLineEdit, QDateEdit, QComboBox, QRadioButton, QListWidget, QSizePolicy, QSpacerItem, QMessageBox
 from PyQt5.QtGui import QPixmap, QIcon, QFont
 from PyQt5.QtCore import QRect, QSize, Qt
+from PyQt5 import QtGui
 from pyqt_checkbox_list_widget.checkBoxListWidget import CheckBoxListWidget
 from program.language_options import language_options
 
@@ -94,4 +95,13 @@ class AddCategoryWindow(QWidget):
         self.hide()
 
     def add_category(self):
-        print("category added")
+        self.msg_box = QMessageBox()
+        self.msg_box.setText(self.language_dict["invalid_category_msg_box_text"])
+        self.msg_box.setWindowTitle(self.language_dict["invalid_category_msg_box_title"])
+        self.msg_box.setStandardButtons(QMessageBox.Ok)
+        self.msg_box.setIcon(QMessageBox.Warning)
+        self.msg_box.exec()
+
+    def closeEvent(self, a0: QtGui.QCloseEvent):
+        self.back_to_main_window()
+        a0.ignore()

@@ -2,6 +2,7 @@ from PyQt5.QtWidgets import QApplication, QMainWindow, QLabel, QWidget, QHBoxLay
     QPushButton, QLineEdit, QDateEdit, QTabWidget
 from PyQt5.QtGui import QPixmap, QIcon, QFont
 from PyQt5.QtCore import QRect, QSize, Qt
+from PyQt5 import QtGui
 from pyqt_checkbox_list_widget.checkBoxListWidget import CheckBoxListWidget
 from program.language_options import language_options
 import sys
@@ -262,3 +263,7 @@ class AllTasksWindow(QWidget):
     def settings_window_show(self):
         self.settings_window = SettingsWindow(self, self.tasker, self.settings)
         self.settings_window.show()
+
+    def closeEvent(self, a0: QtGui.QCloseEvent):
+        self.back_to_main_window()
+        a0.ignore()
