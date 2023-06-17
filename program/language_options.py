@@ -49,7 +49,17 @@ eng_dict = {
     "insert_new_subtask_name_label": "Name of the new subtask",
     "add_category_title": "ADD CATEGORY",
     "insert_new_category_name_label": "Name of the new category",
-    "none_label": "NONE"
+    "none_label": "NONE",
+    "msg_box_text": "Your task involves cooking. A recipe was detected. Do you want to create another task with the shopping list?",
+    "msg_box_title": "Sponsored by aniagotuje.pl",
+    "invalid_category_msg_box_text": "You can't add a duplicate category",
+    "invalid_category_msg_box_title": "Duplicate category alert",
+    "invalid_subtask_msg_box_text": "You can't add a duplicate subtask",
+    "invalid_subtask_msg_box_title": "Duplicate subtask alert",
+    "cant_del_cat_msg_box_text": "You can't delete this category. There are tasks assigned to it.",
+    "cant_del_cat_msg_box_title": "Delete category alert",
+    "quit_confirmation": "Quit confirmation",
+    "are_you_sure_you_want_to_quit": "Are you sure you want to quit?"
 }
 
 pol_dict = {
@@ -103,7 +113,17 @@ pol_dict = {
     "insert_new_subtask_name_label": "Nazwa nowego podzadania",
     "add_category_title": "DODAJ KATEGORIĘ",
     "insert_new_category_name_label": "Nazwa nowej kategorii",
-    "none_label": "BRAK"
+    "none_label": "BRAK",
+    "msg_box_text": "Twoje zadanie związane jest z gotowaniem. Wykryto przepis. Czy chcesz utworzyć nowe zadanie z lista zakupów?",
+    "msg_box_title": "Akcja sponsorowana przez aniagotuje.pl",
+    "invalid_category_msg_box_text": "Nie możesz utworzyć duplikatu kategorii",
+    "invalid_category_msg_box_title": "Ostrzeżenie - duplikat kategorii",
+    "invalid_subtask_msg_box_text": "Nie możesz utworzyć duplikatu podzadania",
+    "invalid_subtask_msg_box_title": "Ostrzeżenie - duplikat podzadania",
+    "cant_del_cat_msg_box_text": "Nie możesz usunąć tej kategorii. Istnieją przypisane do niej zadania.",
+    "cant_del_cat_msg_box_title": "Ostrzeżenie - usuwanie kategorii",
+    "quit_confirmation": "Potwierdzenie",
+    "are_you_sure_you_want_to_quit": "Czy na pewno chcesz wyjść z aplikacji?"
 }
 
 silly_dict = {
@@ -157,7 +177,17 @@ silly_dict = {
     "insert_new_subtask_name_label": "Nazwa nowego sidequesta",
     "add_category_title": "DAWAJ NOWĄ",
     "insert_new_category_name_label": "Nazwa nowej kategorii",
-    "none_label": "NIE MA"
+    "none_label": "NIE MA",
+    "msg_box_text": "Ej ziomek, chyba będziesz coś pichcić. Chcesz taska na listę zakupów?",
+    "msg_box_title": "Powered by aniagotuje.pl. Audycja zawierała lokowanie produktu",
+    "invalid_category_msg_box_text": "Ej ziomek ale już dodałxś taką kategorię",
+    "invalid_category_msg_box_title": "NO SORRY DUPLIKAT",
+    "invalid_subtask_msg_box_text": "Ej ziomek ale już dodałxś taki subquest",
+    "invalid_subtask_msg_box_title": "NO SORRY DUPLIKAT",
+    "cant_del_cat_msg_box_text": "Ej byczku ale do tej kategorii są przypisane questy, nie możesz jej tak po prostu wy-yeetować",
+    "cant_del_cat_msg_box_title": "EJ ZIOM",
+    "quit_confirmation": "Potwierdzenie",
+    "are_you_sure_you_want_to_quit": "Już nas opuszczasz?"
 }
 
 language_options = {

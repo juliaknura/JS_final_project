@@ -1,7 +1,8 @@
 from PyQt5.QtWidgets import QApplication, QMainWindow, QLabel, QWidget, QHBoxLayout, QVBoxLayout, \
-    QPushButton, QLineEdit, QDateEdit
+    QPushButton, QLineEdit, QDateEdit, QMessageBox
 from PyQt5.QtGui import QPixmap, QIcon, QFont
 from PyQt5.QtCore import QRect, QSize, Qt
+from PyQt5 import QtGui
 from pyqt_checkbox_list_widget.checkBoxListWidget import CheckBoxListWidget
 from program.language_options import language_options
 import sys
@@ -281,4 +282,14 @@ class MainWindow(QMainWindow):
     def update_window(self):
         # updates just in case things have changed in other views
         print("main window updated")
+
+    def closeEvent(self, a0: QtGui.QCloseEvent):
+        reply = QMessageBox.question(self, self.language_dict["quit_confirmation"], self.language_dict["are_you_sure_you_want_to_quit"],
+                                     QMessageBox.Yes | QMessageBox.No, QMessageBox.No)
+
+        if reply == QMessageBox.Yes:
+            a0.accept()
+        else:
+            a0.ignore()
+
 
