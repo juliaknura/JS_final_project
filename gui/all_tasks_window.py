@@ -229,6 +229,8 @@ class AllTasksWindow(QWidget):
         self.action_menu_button.clicked.connect(self.action_menu_window_show)
         self.settings_button.clicked.connect(self.settings_window_show)
         self.new_subtask_button.clicked.connect(self.add_subtask_window_show)
+        self.delete_subtask_button.clicked.connect(self.delete_subtask)
+        self.delete_task_button.clicked.connect(self.delete_task)
 
     def changed_category(self, index):
         self.name_field.setText(self.categories[index])
@@ -263,6 +265,12 @@ class AllTasksWindow(QWidget):
     def settings_window_show(self):
         self.settings_window = SettingsWindow(self, self.tasker, self.settings)
         self.settings_window.show()
+
+    def delete_subtask(self):
+        pass
+
+    def delete_task(self):
+        pass
 
     def closeEvent(self, a0: QtGui.QCloseEvent):
         self.back_to_main_window()
