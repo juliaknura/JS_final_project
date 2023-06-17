@@ -11,6 +11,7 @@ from program.Settings import Settings
 from program.Tasker import Tasker
 from program.Task import Task
 import os
+from gui.add_subtask_window import AddSubtaskWindow2
 
 class AddTaskWindow(QWidget):
 
@@ -154,6 +155,7 @@ class AddTaskWindow(QWidget):
         self.exec_date_layout.addWidget(self.none_exec_date)
 
         self.back_button.clicked.connect(self.back_to_main_window)
+        self.new_subtask_button.clicked.connect(self.add_subtask_window_show)
 
 
 
@@ -169,3 +171,10 @@ class AddTaskWindow(QWidget):
         self.parent_widget.update_window()
         self.parent_widget.show()
         self.hide()
+
+    def update_window(self):
+        pass
+
+    def add_subtask_window_show(self):
+        self.add_subtask_window = AddSubtaskWindow2(self, self.tasker, self.settings)
+        self.add_subtask_window.show()

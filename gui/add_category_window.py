@@ -6,7 +6,7 @@ from pyqt_checkbox_list_widget.checkBoxListWidget import CheckBoxListWidget
 from program.language_options import language_options
 
 
-class AddSubtaskWindow(QWidget):
+class AddCategoryWindow(QWidget):
 
     def __init__(self, parent, tasker, settings):
         super().__init__()
@@ -25,7 +25,7 @@ class AddSubtaskWindow(QWidget):
         # TODO - to pewnie lepiej bedzie potem wyszczegolnic do funkcji
 
         # main window properties
-        self.setWindowTitle(self.language_dict["new_subtask_button"])
+        self.setWindowTitle(self.language_dict["add_category_button"])
         self.setGeometry(100, 100, 450, 200)
 
         # widgets
@@ -44,23 +44,23 @@ class AddSubtaskWindow(QWidget):
         self.content_widget.setLayout(self.content_layout)
 
         # labels
-        self.title_label = QLabel(self.language_dict["add_subtask_title"])
+        self.title_label = QLabel(self.language_dict["add_category_title"])
         font = self.title_label.font()
         font.setBold(True)
         font.setPointSize(20)
         self.title_label.setFont(font)
-        self.insert_new_subtask_name_label = QLabel(self.language_dict["insert_new_subtask_name_label"])
+        self.insert_new_category_name_label = QLabel(self.language_dict["insert_new_category_name_label"])
 
         # buttons
         self.back_button = QPushButton()
         self.back_button.setText(self.language_dict["back_button"])
 
-        self.add_subtask_button = QPushButton()
-        self.add_subtask_button.setText(self.language_dict["new_subtask_button"])
-        self.add_subtask_button.setFixedSize(120, 27)
+        self.add_category_button = QPushButton()
+        self.add_category_button.setText(self.language_dict["add_category_button"])
+        self.add_category_button.setFixedSize(120, 27)
 
         # fields
-        self.subtask_name_field = QLineEdit()
+        self.category_name_field = QLineEdit()
 
         # spacer
         self.spacer = QSpacerItem(80, 1, QSizePolicy.Minimum, QSizePolicy.Expanding)
@@ -80,26 +80,18 @@ class AddSubtaskWindow(QWidget):
         self.top_layout.addWidget(self.title_label)
 
         # arrange content widget
-        self.content_layout.addWidget(self.insert_new_subtask_name_label)
-        self.content_layout.addWidget(self.subtask_name_field)
-        self.content_layout.addWidget(self.add_subtask_button, alignment=Qt.AlignCenter)
+        self.content_layout.addWidget(self.insert_new_category_name_label)
+        self.content_layout.addWidget(self.category_name_field)
+        self.content_layout.addWidget(self.add_category_button, alignment=Qt.AlignCenter)
 
         # button events
         self.back_button.clicked.connect(self.back_to_main_window)
-        self.add_subtask_button.clicked.connect(self.add_subtask)
+        self.add_category_button.clicked.connect(self.add_category)
 
     def back_to_main_window(self):
         self.parent_widget.update_window()
         self.parent_widget.show()
         self.hide()
 
-    def add_subtask(self):
-        print("type 1 window")
-
-
-class AddSubtaskWindow2(AddSubtaskWindow):
-    def __init__(self, parent, tasker, settings):
-        super().__init__(parent, tasker, settings)
-
-    def add_subtask(self):
-        print("type 2 window")
+    def add_category(self):
+        print("category added")

@@ -9,6 +9,7 @@ from program.Settings import Settings
 from program.Tasker import Tasker
 from program.Task import Task
 import os
+from gui.add_category_window import AddCategoryWindow
 
 
 class ManageCategoriesWindow(QWidget):
@@ -100,6 +101,7 @@ class ManageCategoriesWindow(QWidget):
 
         # button events
         self.back_button.clicked.connect(self.back_to_main_window)
+        self.add_category_button.clicked.connect(self.add_category_window_show)
 
     def get_categories(self):
         return ["k1", "k2", "k3"]
@@ -109,3 +111,9 @@ class ManageCategoriesWindow(QWidget):
         self.parent_widget.show()
         self.hide()
 
+    def update_window(self):
+        pass
+
+    def add_category_window_show(self):
+        self.add_category_window = AddCategoryWindow(self, self.tasker, self.settings)
+        self.add_category_window.show()

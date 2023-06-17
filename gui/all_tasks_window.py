@@ -55,6 +55,9 @@ class AllTasksWindow(QWidget):
         self.right_buttons_widget = QWidget()
         self.right_buttons_widget.setFixedSize(350, 60)
 
+        self.deadline_widget = QWidget()
+        self.exec_date_widget = QWidget()
+
         # layouts
         self.main_layout = QVBoxLayout()
         self.main_widget.setLayout(self.main_layout)
@@ -85,6 +88,12 @@ class AllTasksWindow(QWidget):
 
         self.right_buttons_layout = QHBoxLayout()
         self.right_buttons_widget.setLayout(self.right_buttons_layout)
+
+        self.deadline_layout = QHBoxLayout()
+        self.deadline_widget.setLayout(self.deadline_layout)
+
+        self.exec_date_layout = QHBoxLayout()
+        self.exec_date_widget.setLayout(self.exec_date_layout)
 
         # buttons
         self.back_button = QPushButton()
@@ -131,6 +140,11 @@ class AllTasksWindow(QWidget):
         self.task_deadline_label = QLabel(self.language_dict["task_deadline_label"])
         self.task_exec_date_label = QLabel(self.language_dict["task_exec_date_label"])
         self.subtasks_label = QLabel(self.language_dict["subtasks_label"])
+
+        # self.none_label = QLabel(self.language_dict["none_label"])
+        # self.none_label2 = QLabel(self.language_dict["none_label"])
+        self.none_label = QLabel("")
+        self.none_label2 = QLabel("")
 
         # tabs (there's so much code in there bc they're 'fake' tabs)
         number_of_tabs = len(self.categories)
@@ -185,11 +199,21 @@ class AllTasksWindow(QWidget):
         self.task_details_layout.addWidget(self.task_desc_label)
         self.task_details_layout.addWidget(self.desc_field)
         self.task_details_layout.addWidget(self.task_deadline_label)
-        self.task_details_layout.addWidget(self.deadline_field)
+        self.task_details_layout.addWidget(self.deadline_widget)
         self.task_details_layout.addWidget(self.task_exec_date_label)
-        self.task_details_layout.addWidget(self.exec_date_field)
+        self.task_details_layout.addWidget(self.exec_date_widget)
         self.task_details_layout.addWidget(self.subtasks_label)
         self.task_details_layout.addWidget(self.subtask_list)
+
+        # arrange deadline widget
+        self.deadline_layout.addWidget(self.deadline_field)
+        self.deadline_layout.addWidget(self.none_label)
+        self.deadline_widget.setLayout(self.deadline_layout)
+
+        # arrange exec date widget
+        self.exec_date_layout.addWidget(self.exec_date_field)
+        self.exec_date_layout.addWidget(self.none_label2)
+        self.exec_date_widget.setLayout(self.exec_date_layout)
 
         # arrange task actions widget
         self.task_actions_layout.addWidget(self.new_subtask_button)
