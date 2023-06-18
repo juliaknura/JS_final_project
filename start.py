@@ -11,6 +11,13 @@ if __name__ == "__main__":
 
     settings = Settings()
     tasker = Tasker(settings.priority_dict, settings.daily_list_priority_lvl)
+    # tasker.add_category("katA")
+    # tasker.add_category("katB")
+    # tasker.add_task("posprzataj","katA","opis taska posprzataj",datetime(2023,6,18),datetime(2023,6,19),[])
+    # tasker.add_task("obiad","katA","opis taska obiad",datetime(2023,6,18),None,[])
+    # tasker.add_task("a","katA","opis taska a",datetime(2023,6,18),datetime(2023,6,19),[])
+    # tasker.add_task("b","katA","opis taska b",datetime(2023,6,18),datetime(2023,6,19),[])
+    # tasker.add_task("c","katA","opis taska c",datetime(2023,6,18),datetime(2023,6,19),[])
     window = MainWindow(tasker, settings)
     window.show()
 
