@@ -144,7 +144,9 @@ class Tasker:
             task = Tasks(name=name, cat_id=cat_id, task_desc=desc, exec_date=exec_date,
                          deadline=deadline, is_checked=False, checked_off_date=None)
             session.add(task)
+            session.commit()
 
+        with Session(self.engine) as session:
             for subtask_name in subtasks:
                 subtask = Subtasks(name=subtask_name, parent_task_id=task.task_id)
                 session.add(subtask)
