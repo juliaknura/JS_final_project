@@ -1,5 +1,7 @@
+from typing import List
+
 from PyQt5.QtWidgets import QApplication, QMainWindow, QLabel, QWidget, QHBoxLayout, QVBoxLayout, \
-    QPushButton, QLineEdit, QDateEdit, QTabWidget
+    QPushButton, QLineEdit, QDateEdit, QTabWidget, QListWidget
 from PyQt5.QtGui import QPixmap, QIcon, QFont
 from PyQt5.QtCore import QRect, QSize, Qt
 from PyQt5 import QtGui
@@ -16,6 +18,13 @@ from gui.action_menu_window import ActionMenuWindow
 from gui.settings_window import SettingsWindow
 from gui.add_subtask_window import AddSubtaskWindow
 
+code_color_dict = {
+    0: "background-color: red",
+    1: "background-color: yellow",
+    2: "background-color: green",
+    3: "background-color: white"
+}
+
 
 class AllTasksWindow(QWidget):
     def __init__(self, parent, tasker, settings):
@@ -25,15 +34,18 @@ class AllTasksWindow(QWidget):
         self.tasker = tasker
         self.settings = settings
         self.categories = self.get_category_list()
+        self.current_task_list: List[Task] = []
+        self.current_task_name_list: List[str] = []
+        self.current_task: Task = None
+        self.current_subtasks = []
+        self.current_category = self.categories[0]
+        self.language_setting = None
+        self.language_dict = {}
 
         # hide parent window
         self.parent_widget.hide()
 
-        # language settings
-        self.language_setting = self.settings.language_option
-        # self.language_setting = "polish"
-        self.language_dict = language_options[self.language_setting]
-        # TODO - to pewnie lepiej bedzie potem wyszczegolnic do funkcji
+        self.update_settings()
 
         # main window properties
         self.setWindowTitle(self.language_dict["all_tasks_window_title"])
@@ -96,6 +108,12 @@ class AllTasksWindow(QWidget):
         self.exec_date_layout = QHBoxLayout()
         self.exec_date_widget.setLayout(self.exec_date_layout)
 
+        # checkbox replacement
+        self.task_checkbox_button = QPushButton()
+        self.task_checkbox_button.setText(self.language_dict["task_checkbox_button"])
+        self.subtask_checkbox_button = QPushButton()
+        self.subtask_checkbox_button.setText(self.language_dict["subtask_checkbox_button"])
+
         # buttons
         self.back_button = QPushButton()
         self.back_button.setText(self.language_dict["back_button"])
@@ -131,9 +149,10 @@ class AllTasksWindow(QWidget):
         self.exec_date_field = QDateEdit()
         self.exec_date_field.setEnabled(False)
 
-        # checkbox widgets
-        self.task_list = CheckBoxListWidget()
-        self.subtask_list = CheckBoxListWidget()
+
+        # list widgets
+        self.task_list = QListWidget()
+        self.subtask_list = QListWidget()
 
         # text labels
         self.task_name_label = QLabel(self.language_dict["task_name_label"])
@@ -146,6 +165,9 @@ class AllTasksWindow(QWidget):
         # self.none_label2 = QLabel(self.language_dict["none_label"])
         self.none_label = QLabel("")
         self.none_label2 = QLabel("")
+
+        self.task_state_label = QLabel(self.language_dict["false"])
+        self.subtask_state_label = QLabel(self.language_dict["false"])
 
         # tabs (there's so much code in there bc they're 'fake' tabs)
         number_of_tabs = len(self.categories)
@@ -195,6 +217,8 @@ class AllTasksWindow(QWidget):
         self.detail_layout.addWidget(self.task_actions_widget)
 
         # arrange task det widget
+        self.task_details_layout.addWidget(self.task_state_label)
+        self.task_details_layout.addWidget(self.task_checkbox_button)
         self.task_details_layout.addWidget(self.task_name_label)
         self.task_details_layout.addWidget(self.name_field)
         self.task_details_layout.addWidget(self.task_desc_label)
@@ -205,6 +229,8 @@ class AllTasksWindow(QWidget):
         self.task_details_layout.addWidget(self.exec_date_widget)
         self.task_details_layout.addWidget(self.subtasks_label)
         self.task_details_layout.addWidget(self.subtask_list)
+        self.task_details_layout.addWidget(self.subtask_state_label)
+        self.task_details_layout.addWidget(self.subtask_checkbox_button)
 
         # arrange deadline widget
         self.deadline_layout.addWidget(self.deadline_field)
@@ -229,9 +255,133 @@ class AllTasksWindow(QWidget):
         self.action_menu_button.clicked.connect(self.action_menu_window_show)
         self.settings_button.clicked.connect(self.settings_window_show)
         self.new_subtask_button.clicked.connect(self.add_subtask_window_show)
+        self.delete_subtask_button.clicked.connect(self.delete_subtask)
+        self.delete_task_button.clicked.connect(self.delete_task)
+        self.task_checkbox_button.clicked.connect(self.task_toggled)
+        self.subtask_checkbox_button.clicked.connect(self.subtask_toggled)
+        self.task_list.itemClicked.connect(self.task_clicked)
+        self.subtask_list.itemClicked.connect(self.subtask_clicked)
+
+        self.pull_task_list()
+
+    def update_settings(self):
+        """updates language settings"""
+        self.language_setting = self.settings.language_option
+        self.language_dict = language_options[self.language_setting]
+
+    def update_text(self):
+        """updates all the text displaying in the window in case the language settings have been changed"""
+        self.setWindowTitle(self.language_dict["all_tasks_window_title"])
+        self.task_checkbox_button.setText(self.language_dict["task_checkbox_button"])
+        self.subtask_checkbox_button.setText(self.language_dict["subtask_checkbox_button"])
+        self.back_button.setText(self.language_dict["back_button"])
+        self.checked_tasks_button.setText(self.language_dict["checked_tasks_button"])
+        self.action_menu_button.setText(self.language_dict["action_menu_button"])
+        self.new_subtask_button.setText(self.language_dict["new_subtask_button"])
+        self.delete_task_button.setText(self.language_dict["delete_task_button"])
+        self.delete_subtask_button.setText(self.language_dict["delete_subtask_button"])
+        self.task_name_label.setText(self.language_dict["task_name_label"])
+        self.task_desc_label.setText(self.language_dict["task_desc_label"])
+        self.task_deadline_label.setText(self.language_dict["task_deadline_label"])
+        self.task_exec_date_label.setText(self.language_dict["task_exec_date_label"])
+        self.subtasks_label.setText(self.language_dict["subtasks_label"])
+        self.none_label.setText(self.language_dict["none_label"])
+        self.none_label2.setText(self.language_dict["none_label"])
+        self.task_state_label.setText(self.language_dict["false"])
+        self.subtask_state_label.setText(self.language_dict["false"])
+
+    def pull_task_list(self):
+        # pull task list
+        self.tasker.get_by_category(self.current_category)
+        self.current_task_list = self.tasker.get_current_list()
+        self.current_task = None
+        self.current_subtasks = []
+        self.current_task_name_list = []
+
+        # obtain task name list
+        for task in self.current_task_list:
+            self.current_task_name_list.append(task.name)
+
+        # set new task list
+        self.task_list.clear()
+        self.task_list.addItems(self.current_task_name_list)
+
+        # clear detail fields
+        self.name_field.setText("")
+        self.task_deadline_label.setStyleSheet(code_color_dict[3])
+        self.desc_field.setText("")
+        self.deadline_field.clear()
+        self.none_label.setText(self.language_dict["none_label"])
+        self.none_label2.setText(self.language_dict["none_label"])
+        self.exec_date_field.clear()
+        self.subtask_list.clear()
+        self.task_state_label.setText(self.language_dict["false"])
+        self.subtask_state_label.setText(self.language_dict["false"])
+
+        # enabling buttons
+        self.enable_buttons(False)
+
+    def task_clicked(self):
+        """displays the details of the selected task"""
+        self.enable_buttons(True)
+        self.subtask_checkbox_button.setEnabled(False)
+
+        index = self.task_list.currentRow()
+        task = self.current_task_list[index]
+        self.current_task = task
+        self.current_subtasks = list(task.subtasks.keys())
+
+        if task.is_checked:
+            self.task_state_label.setText(self.language_dict["true"])
+        else:
+            self.task_state_label.setText(self.language_dict["false"])
+        self.name_field.setText(task.name)
+        self.task_deadline_label.setStyleSheet(code_color_dict[task.priority])
+        self.desc_field.setText(task.desc) if task.desc is not None else self.desc_field.setText("")
+        self.deadline_field.setDate(task.deadline) if task.deadline is not None else self.deadline_field.clear()
+        self.none_label.setText("") if task.deadline is not None else self.none_label.setText(self.language_dict["none_label"])
+        self.exec_date_field.setDate(task.exec_date) if task.exec_date is not None else self.exec_date_field.clear()
+        self.none_label2.setText("") if task.exec_date is not None else self.none_label.setText(self.language_dict["none_label"])
+        self.subtask_list.clear()
+        self.subtask_list.addItems(self.current_subtasks)
+        self.subtask_state_label.setText(self.language_dict["false"])
+
+    def subtask_clicked(self):
+        """sets the state of the subtask checkbox in accordance with the current state of the subtask"""
+        self.subtask_checkbox_button.setEnabled(True)
+        current_subtask_index = self.subtask_list.currentRow()
+        subtask_state = self.current_task.subtasks[self.current_subtasks[current_subtask_index]]
+        if subtask_state:
+            self.subtask_state_label.setText(self.language_dict["true"])
+        else:
+            self.subtask_state_label.setText(self.language_dict["false"])
+
+    def task_toggled(self):
+        """toggles the task in database and in the current list"""
+        self.tasker.toggle_task(self.current_task.task_id)
+        if self.current_task.is_checked:
+            self.task_state_label.setText(self.language_dict["true"])
+        else:
+            self.task_state_label.setText(self.language_dict["false"])
+
+    def subtask_toggled(self):
+        """toggles the subtask in database and in the current list"""
+        self.tasker.toggle_subtask(self.current_task.task_id, self.current_subtasks[self.subtask_list.currentRow()])
+        if self.current_task.subtasks[self.current_subtasks[self.subtask_list.currentRow()]]:
+            self.subtask_state_label.setText(self.language_dict["true"])
+        else:
+            self.subtask_state_label.setText(self.language_dict["false"])
+
+    def enable_buttons(self, state):
+        self.new_subtask_button.setEnabled(state)
+        self.delete_subtask_button.setEnabled(state)
+        self.delete_task_button.setEnabled(state)
+        self.task_checkbox_button.setEnabled(state)
+        self.subtask_checkbox_button.setEnabled(state)
 
     def changed_category(self, index):
-        self.name_field.setText(self.categories[index])
+        self.current_category = self.categories[index]
+        self.pull_task_list()
 
     def back_to_main_window(self):
         self.parent_widget.update_window()
@@ -239,10 +389,13 @@ class AllTasksWindow(QWidget):
         self.hide()
 
     def get_category_list(self):
-        return ["kat1", "kat2", "kat3"]
+        return self.tasker.category_list()
 
     def update_window(self):
-        print("all tasks window updated")
+        """updates the info after coming back to this window"""
+        self.update_settings()
+        self.update_text()
+        self.pull_task_list()
 
     def checked_tasks_window_show(self):
         self.checked_tasks_window = CheckedTasksWindow(self, self.tasker, self.settings)
@@ -263,6 +416,15 @@ class AllTasksWindow(QWidget):
     def settings_window_show(self):
         self.settings_window = SettingsWindow(self, self.tasker, self.settings)
         self.settings_window.show()
+
+    def delete_subtask(self):
+        current_subtask_index = self.subtask_list.currentRow()
+        self.tasker.delete_subtask(self.current_task.task_id, self.current_subtasks[current_subtask_index])
+        self.pull_task_list()
+
+    def delete_task(self):
+        self.tasker.delete_task(self.current_task.task_id)
+        self.pull_task_list()
 
     def closeEvent(self, a0: QtGui.QCloseEvent):
         self.back_to_main_window()

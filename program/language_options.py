@@ -59,7 +59,13 @@ eng_dict = {
     "cant_del_cat_msg_box_text": "You can't delete this category. There are tasks assigned to it.",
     "cant_del_cat_msg_box_title": "Delete category alert",
     "quit_confirmation": "Quit confirmation",
-    "are_you_sure_you_want_to_quit": "Are you sure you want to quit?"
+    "are_you_sure_you_want_to_quit": "Are you sure you want to quit?",
+    "task_checkbox_button": "change task state",
+    "subtask_checkbox_button": "change subtask state",
+    "true": "done",
+    "false": "not done",
+    "zero_length_name_msg": "Name of the task is obligatory!",
+    "zero_length_name_title": "Alert!"
 }
 
 pol_dict = {
@@ -123,7 +129,13 @@ pol_dict = {
     "cant_del_cat_msg_box_text": "Nie możesz usunąć tej kategorii. Istnieją przypisane do niej zadania.",
     "cant_del_cat_msg_box_title": "Ostrzeżenie - usuwanie kategorii",
     "quit_confirmation": "Potwierdzenie",
-    "are_you_sure_you_want_to_quit": "Czy na pewno chcesz wyjść z aplikacji?"
+    "are_you_sure_you_want_to_quit": "Czy na pewno chcesz wyjść z aplikacji?",
+    "task_checkbox_button": "zmień stan zadania",
+    "subtask_checkbox_button": "zmień stan podzadania",
+    "true": "wykonane",
+    "false": "nie wykonane",
+    "zero_length_name_msg": "Nazwa jest obligatoryjna!",
+    "zero_length_name_title": "Uwaga!"
 }
 
 silly_dict = {
@@ -187,7 +199,13 @@ silly_dict = {
     "cant_del_cat_msg_box_text": "Ej byczku ale do tej kategorii są przypisane questy, nie możesz jej tak po prostu wy-yeetować",
     "cant_del_cat_msg_box_title": "EJ ZIOM",
     "quit_confirmation": "Potwierdzenie",
-    "are_you_sure_you_want_to_quit": "Już nas opuszczasz?"
+    "are_you_sure_you_want_to_quit": "Już nas opuszczasz?",
+    "task_checkbox_button": "zmień stan questa",
+    "subtask_checkbox_button": "zmień stan sidequesta",
+    "true": "odwalone",
+    "false": "nie odwalone",
+    "zero_length_name_msg": "Nazwa questa jest atrybutem obligatoryjnym! (Hanna Mazur kręci głową z rozczarowaniem)",
+    "zero_length_name_title": "Zoinks!"
 }
 
 language_options = {

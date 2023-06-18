@@ -5,25 +5,25 @@ from PyQt5.QtCore import QRect, QSize, Qt
 from PyQt5 import QtGui
 from pyqt_checkbox_list_widget.checkBoxListWidget import CheckBoxListWidget
 from program.language_options import language_options
+from program.Tasker import Tasker
 
 
 class AddSubtaskWindow(QWidget):
 
-    def __init__(self, parent, tasker, settings):
+    def __init__(self, parent, tasker: Tasker, settings, task_id):
         super().__init__()
 
         self.parent_widget = parent
         self.tasker = tasker
         self.settings = settings
+        self.task_id = task_id
+        self.language_setting = None
+        self.language_dict = {}
 
         # hide parent window
         self.parent_widget.hide()
 
-        # language settings
-        self.language_setting = self.settings.language_option
-        # self.language_setting = "silly"
-        self.language_dict = language_options[self.language_setting]
-        # TODO - to pewnie lepiej bedzie potem wyszczegolnic do funkcji
+        self.language_settings()
 
         # main window properties
         self.setWindowTitle(self.language_dict["new_subtask_button"])
@@ -58,7 +58,7 @@ class AddSubtaskWindow(QWidget):
 
         self.add_subtask_button = QPushButton()
         self.add_subtask_button.setText(self.language_dict["new_subtask_button"])
-        self.add_subtask_button.setFixedSize(120, 27)
+        self.add_subtask_button.setFixedSize(150, 27)
 
         # fields
         self.subtask_name_field = QLineEdit()
@@ -95,12 +95,29 @@ class AddSubtaskWindow(QWidget):
         self.hide()
 
     def add_subtask(self):
-        self.msg_box = QMessageBox()
-        self.msg_box.setText(self.language_dict["invalid_subtask_msg_box_text"])
-        self.msg_box.setWindowTitle(self.language_dict["invalid_subtask_msg_box_title"])
-        self.msg_box.setStandardButtons(QMessageBox.Ok)
-        self.msg_box.setIcon(QMessageBox.Warning)
-        self.msg_box.exec()
+        subtask_name = self.subtask_name_field.text()
+        if subtask_name == "":
+            self.msg_box = QMessageBox()
+            self.msg_box.setText(self.language_dict["zero_length_name_msg"])
+            self.msg_box.setWindowTitle(self.language_dict["zero_length_name_title"])
+            self.msg_box.setStandardButtons(QMessageBox.Ok)
+            self.msg_box.exec()
+        else:
+            succeeded = self.tasker.add_subtask(self.task_id, subtask_name)
+            if not succeeded:
+                self.msg_box = QMessageBox()
+                self.msg_box.setText(self.language_dict["invalid_subtask_msg_box_text"])
+                self.msg_box.setWindowTitle(self.language_dict["invalid_subtask_msg_box_title"])
+                self.msg_box.setStandardButtons(QMessageBox.Ok)
+                self.msg_box.setIcon(QMessageBox.Warning)
+                self.msg_box.exec()
+            else:
+                self.back_to_main_window()
+
+
+    def language_settings(self):
+        self.language_setting = self.settings.language_option
+        self.language_dict = language_options[self.language_setting]
 
     def closeEvent(self, a0: QtGui.QCloseEvent):
         self.back_to_main_window()
@@ -109,14 +126,18 @@ class AddSubtaskWindow(QWidget):
 
 class AddSubtaskWindow2(AddSubtaskWindow):
     def __init__(self, parent, tasker, settings):
-        super().__init__(parent, tasker, settings)
+        super().__init__(parent, tasker, settings, None)
 
     def add_subtask(self):
-        self.msg_box = QMessageBox()
-        self.msg_box.setText(self.language_dict["invalid_subtask_msg_box_text"])
-        self.msg_box.setWindowTitle(self.language_dict["invalid_subtask_msg_box_title"])
-        self.msg_box.setStandardButtons(QMessageBox.Ok)
-        self.msg_box.setIcon(QMessageBox.Warning)
-        self.msg_box.exec()
+        subtask_name = self.subtask_name_field.text()
+        if subtask_name == "":
+            self.msg_box = QMessageBox()
+            self.msg_box.setText(self.language_dict["zero_length_name_msg"])
+            self.msg_box.setWindowTitle(self.language_dict["zero_length_name_title"])
+            self.msg_box.setStandardButtons(QMessageBox.Ok)
+            self.msg_box.exec()
+        else:
+            self.parent_widget.add_subtask(subtask_name)
+            self.back_to_main_window()
 
 

@@ -27,8 +27,8 @@ class ManageCategoriesWindow(QWidget):
         self.parent_widget.hide()
 
         # language settings
-        # self.language_setting = self.settings.language_option
-        self.language_setting = "silly"
+        self.language_setting = self.settings.language_option
+        # self.language_setting = "silly"
         self.language_dict = language_options[self.language_setting]
         # TODO - to pewnie lepiej bedzie potem wyszczegolnic do funkcji
 
