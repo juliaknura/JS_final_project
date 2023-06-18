@@ -63,7 +63,9 @@ eng_dict = {
     "task_checkbox_button": "change task state",
     "subtask_checkbox_button": "change subtask state",
     "true": "done",
-    "false": "not done"
+    "false": "not done",
+    "zero_length_name_msg": "Name of the task is obligatory!",
+    "zero_length_name_title": "Alert!"
 }
 
 pol_dict = {
@@ -131,7 +133,9 @@ pol_dict = {
     "task_checkbox_button": "zmień stan zadania",
     "subtask_checkbox_button": "zmień stan podzadania",
     "true": "wykonane",
-    "false": "nie wykonane"
+    "false": "nie wykonane",
+    "zero_length_name_msg": "Nazwa jest obligatoryjna!",
+    "zero_length_name_title": "Uwaga!"
 }
 
 silly_dict = {
@@ -199,7 +203,9 @@ silly_dict = {
     "task_checkbox_button": "zmień stan questa",
     "subtask_checkbox_button": "zmień stan sidequesta",
     "true": "odwalone",
-    "false": "nie odwalone"
+    "false": "nie odwalone",
+    "zero_length_name_msg": "Nazwa questa jest atrybutem obligatoryjnym! (Hanna Mazur kręci głową z rozczarowaniem)",
+    "zero_length_name_title": "Zoinks!"
 }
 
 language_options = {
