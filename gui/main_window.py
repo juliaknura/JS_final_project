@@ -270,7 +270,7 @@ class MainWindow(QMainWindow):
         self.add_task_window.show()
 
     def add_subtask_window_show(self):
-        self.add_subtask_window = AddSubtaskWindow(self, self.tasker, self.settings)
+        self.add_subtask_window = AddSubtaskWindow(self, self.tasker, self.settings, self.current_task.task_id)
         self.add_subtask_window.show()
 
     def action_menu_window_show(self):
@@ -282,10 +282,13 @@ class MainWindow(QMainWindow):
         self.settings_window.show()
 
     def delete_subtask(self):
-        pass
+        current_subtask_index = self.subtask_list.currentRow()
+        self.tasker.delete_subtask(self.current_task.task_id, self.current_subtasks[current_subtask_index])
+        self.pull_task_list()
 
     def delete_task(self):
-        pass
+        self.tasker.delete_task(self.current_task.task_id)
+        self.pull_task_list()
 
     def update_settings(self):
         """updates language settings"""
@@ -352,25 +355,17 @@ class MainWindow(QMainWindow):
         self.subtask_state_label.setText(self.language_dict["false"])
 
         # enabling buttons
-        if len(self.current_task_list) == 0:
-            self.new_subtask_button.setEnabled(False)
-            self.delete_subtask_button.setEnabled(False)
-            self.delete_task_button.setEnabled(False)
-            self.task_checkbox_button.setEnabled(False)
-            self.subtask_checkbox_button.setEnabled(False)
-        else:
-            self.new_subtask_button.setEnabled(True)
-            self.delete_subtask_button.setEnabled(True)
-            self.delete_task_button.setEnabled(True)
-            self.task_checkbox_button.setEnabled(True)
-            self.subtask_checkbox_button.setEnabled(True)
+        self.enable_buttons(False)
 
     def task_clicked(self):
         """displays the details of the selected task"""
+        self.enable_buttons(True)
+        self.subtask_checkbox_button.setEnabled(False)
+
         index = self.task_list.currentRow()
         task = self.current_task_list[index]
         self.current_task = task
-        self.current_subtasks = task.subtasks.values()
+        self.current_subtasks = list(task.subtasks.keys())
 
         if task.is_checked:
             self.task_state_label.setText(self.language_dict["true"])
@@ -383,20 +378,23 @@ class MainWindow(QMainWindow):
         self.deadline_field.setDate(task.deadline) if task.deadline is not None else self.deadline_field.clear()
         self.none_label.setText("") if task.deadline is not None else self.none_label.setText(self.language_dict["none_label"])
         self.exec_date_field.setDate(task.exec_date) if task.exec_date is not None else self.exec_date_field.clear()
-        self.none_label2.setText("") if task.deadline is not None else self.none_label.setText(self.language_dict["none_label"])
+        self.none_label2.setText("") if task.exec_date is not None else self.none_label.setText(self.language_dict["none_label"])
         self.subtask_list.clear()
-        self.subtask_list.addItems(task.subtasks.values())
+        self.subtask_list.addItems(self.current_subtasks)
+        self.subtask_state_label.setText(self.language_dict["false"])
 
     def subtask_clicked(self):
         """sets the state of the subtask checkbox in accordance with the current state of the subtask"""
+        self.subtask_checkbox_button.setEnabled(True)
         current_subtask_index = self.subtask_list.currentRow()
         subtask_state = self.current_task.subtasks[self.current_subtasks[current_subtask_index]]
         if subtask_state:
             self.subtask_state_label.setText(self.language_dict["true"])
         else:
-            self.task_state_label.setText(self.language_dict["false"])
+            self.subtask_state_label.setText(self.language_dict["false"])
 
     def task_toggled(self):
+        """toggles the task in database and in the current list"""
         self.tasker.toggle_task(self.current_task.task_id)
         if self.current_task.is_checked:
             self.task_state_label.setText(self.language_dict["true"])
@@ -404,11 +402,19 @@ class MainWindow(QMainWindow):
             self.task_state_label.setText(self.language_dict["false"])
 
     def subtask_toggled(self):
+        """toggles the subtask in database and in the current list"""
         self.tasker.toggle_subtask(self.current_task.task_id, self.current_subtasks[self.subtask_list.currentRow()])
         if self.current_task.subtasks[self.current_subtasks[self.subtask_list.currentRow()]]:
             self.subtask_state_label.setText(self.language_dict["true"])
         else:
             self.subtask_state_label.setText(self.language_dict["false"])
+
+    def enable_buttons(self, state):
+        self.new_subtask_button.setEnabled(state)
+        self.delete_subtask_button.setEnabled(state)
+        self.delete_task_button.setEnabled(state)
+        self.task_checkbox_button.setEnabled(state)
+        self.subtask_checkbox_button.setEnabled(state)
 
     def closeEvent(self, a0: QtGui.QCloseEvent):
         reply = QMessageBox.question(self, self.language_dict["quit_confirmation"], self.language_dict["are_you_sure_you_want_to_quit"],

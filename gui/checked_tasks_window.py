@@ -3,7 +3,7 @@ from typing import List
 from PyQt5.QtWidgets import QApplication, QMainWindow, QLabel, QWidget, QHBoxLayout, QVBoxLayout, \
     QPushButton, QLineEdit, QDateEdit, QSpacerItem, QSizePolicy, QListWidget
 from PyQt5.QtGui import QPixmap, QIcon, QFont
-from PyQt5.QtCore import QRect, QSize, Qt
+from PyQt5.QtCore import QRect, QSize, Qt, QDate
 from PyQt5 import QtGui
 from pyqt_checkbox_list_widget.checkBoxListWidget import CheckBoxListWidget
 from program.language_options import language_options
@@ -283,19 +283,16 @@ class CheckedTasksWindow(QWidget):
         self.subtask_state_label.setText(self.language_dict["false"])
 
     def pull_task_list(self, chosen_date):
-        print("dupa enter pull task list function")
         # pull task list
         self.tasker.get_by_checked_off_date(chosen_date)
         self.current_task_list = self.tasker.get_current_list()
         self.current_task = None
         self.current_subtasks = []
         self.current_task_name_list = []
-        print("dupa pull task list")
 
         # obtain task name list
         for task in self.current_task_list:
             self.current_task_name_list.append(task.name)
-        print("dupa obtain task name list")
 
         # set new task list
         self.task_list.clear()
@@ -305,17 +302,17 @@ class CheckedTasksWindow(QWidget):
         self.clear_detail_fields()
 
         # enabling buttons
-        if len(self.current_task_list) == 0:
-            self.set_buttons_state(False)
-        else:
-            self.set_buttons_state(True)
+        self.set_buttons_state(False)
 
     def task_clicked(self):
         """displays the details of the selected task"""
+        self.set_buttons_state(True)
+        self.subtask_checkbox_button.setEnabled(False)
+
         index = self.task_list.currentRow()
         task = self.current_task_list[index]
         self.current_task = task
-        self.current_subtasks = task.subtasks.values()
+        self.current_subtasks = list(task.subtasks.keys())
 
         if task.is_checked:
             self.task_state_label.setText(self.language_dict["true"])
@@ -328,20 +325,24 @@ class CheckedTasksWindow(QWidget):
         self.deadline_field.setDate(task.deadline) if task.deadline is not None else self.deadline_field.clear()
         self.none_label.setText("") if task.deadline is not None else self.none_label.setText(self.language_dict["none_label"])
         self.exec_date_field.setDate(task.exec_date) if task.exec_date is not None else self.exec_date_field.clear()
-        self.none_label2.setText("") if task.deadline is not None else self.none_label.setText(self.language_dict["none_label"])
+        self.none_label2.setText("") if task.exec_date is not None else self.none_label.setText(self.language_dict["none_label"])
         self.subtask_list.clear()
-        self.subtask_list.addItems(task.subtasks.values())
+        self.subtask_list.addItems(self.current_subtasks)
+        self.subtask_state_label.setText(self.language_dict["false"])
 
     def subtask_clicked(self):
         """sets the state of the subtask checkbox in accordance with the current state of the subtask"""
+        self.subtask_checkbox_button.setEnabled(True)
+
         current_subtask_index = self.subtask_list.currentRow()
         subtask_state = self.current_task.subtasks[self.current_subtasks[current_subtask_index]]
         if subtask_state:
             self.subtask_state_label.setText(self.language_dict["true"])
         else:
-            self.task_state_label.setText(self.language_dict["false"])
+            self.subtask_state_label.setText(self.language_dict["false"])
 
     def task_toggled(self):
+        """toggles the task in database and in the current list"""
         self.tasker.toggle_task(self.current_task.task_id)
         if self.current_task.is_checked:
             self.task_state_label.setText(self.language_dict["true"])
@@ -349,6 +350,7 @@ class CheckedTasksWindow(QWidget):
             self.task_state_label.setText(self.language_dict["false"])
 
     def subtask_toggled(self):
+        """toggles the subtask in database and in the current list"""
         self.tasker.toggle_subtask(self.current_task.task_id, self.current_subtasks[self.subtask_list.currentRow()])
         if self.current_task.subtasks[self.current_subtasks[self.subtask_list.currentRow()]]:
             self.subtask_state_label.setText(self.language_dict["true"])
@@ -373,7 +375,9 @@ class CheckedTasksWindow(QWidget):
         self.settings_window.show()
 
     def choose_as_template(self):
-        pass
+        self.add_task_window = AddTaskWindow(self,self.tasker, self.settings, self.current_task)
+        self.add_task_window.show()
+
 
     def choose_date(self):
         chosen_date = datetime(year=self.date_field.date().year(), month=self.date_field.date().month(), day=self.date_field.date().day())
@@ -383,13 +387,14 @@ class CheckedTasksWindow(QWidget):
         """updates the info after coming back to this window"""
         self.update_settings()
         self.update_text()
-        self.set_initial_buttons_state()
+        self.set_initial_buttons_and_fields_state()
 
     def set_initial_buttons_and_fields_state(self):
         self.current_task_list = []
         self.current_task = None
         self.current_subtasks = []
         self.current_task_name_list = []
+        self.task_list.clear()
         self.clear_detail_fields()
         self.set_buttons_state(False)
 
@@ -405,6 +410,7 @@ class CheckedTasksWindow(QWidget):
         self.subtask_list.clear()
         self.task_state_label.setText(self.language_dict["false"])
         self.subtask_state_label.setText(self.language_dict["false"])
+        self.date_field.setDate(QDate.currentDate())
 
     def set_buttons_state(self, state: bool):
         self.template_button.setEnabled(state)
