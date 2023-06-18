@@ -48,10 +48,10 @@ def test_add_delete_task(name, cat, desc, exec_date, ddl, subtasks):
     priorities = {0: 1, 1: 3, 2: 7}
     suid = Tasker(priorities, 0)
     suid.add_category(cat)
-    subtasks = {subtask: False for subtask in subtasks}
+    subtask_dict = {subtask: False for subtask in subtasks}
 
     # WHEN
-    suid.add_task(name, cat, desc, exec_date, ddl, [])
+    suid.add_task(name, cat, desc, exec_date, ddl, subtasks)
     suid.get_by_category(cat)
     tasks = suid.current_task_dict
     task = tasks[1]
@@ -65,7 +65,7 @@ def test_add_delete_task(name, cat, desc, exec_date, ddl, subtasks):
     # THEN
     assert task == Task(task_id=1, name=name, cat=cat, desc=desc, exec_date=exec_date, deadline=ddl,
                         is_checked=False, checked_off_date=None,
-                        priority=suid._calculate_priority(deadline_date=ddl), subtasks=subtasks)
+                        priority=suid._calculate_priority(deadline_date=ddl), subtasks=subtask_dict)
 
     assert len(empty_tasks) == 0
 
