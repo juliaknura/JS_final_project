@@ -25,7 +25,7 @@ class Tasker:
         # level 1 - coming
         # level 2 - far
         self.daily_list_priority_lvl = daily_list_prior_lvl
-        self.get_today_list()
+        # self.get_today_list()
 
     def get_current_list(self):
         """Returns the current tasks in a sorted list"""
@@ -34,7 +34,7 @@ class Tasker:
         return curr_task_list
 
     def _from_task_tuple_to_task(self, task_entry):
-        cat_name = get_category_name(task_entry.cat_id, self.engine)  # switches cat_id with category name
+        cat_name = get_category_name(task_entry.cat_id, self.engine)[0]  # switches cat_id with category name
 
         priority = self._calculate_priority(task_entry.deadline)  # assigns priority
 
@@ -70,10 +70,10 @@ class Tasker:
         task_dict = {}
 
         for task_tuple in task_tuple_list_ddl:
-            task_id, task = self._from_task_tuple_to_task(task_tuple)
+            task_id, task = self._from_task_tuple_to_task(task_tuple[0])
             task_dict[task_id] = task
         for task_tuple in task_tuple_list_exec:
-            task_id, task = self._from_task_tuple_to_task(task_tuple)
+            task_id, task = self._from_task_tuple_to_task(task_tuple[0])
             task_dict[task_id] = task
 
         self.current_task_dict = task_dict
@@ -83,7 +83,7 @@ class Tasker:
         task_tuple_list = by_checked_off_date(checked_off_date, self.engine)
         task_dict = {}
         for task_tuple in task_tuple_list:
-            task_id, task = self._from_task_tuple_to_task(task_tuple)
+            task_id, task = self._from_task_tuple_to_task(task_tuple[0])
             task_dict[task_id] = task
 
         self.current_task_dict = task_dict
@@ -93,7 +93,7 @@ class Tasker:
         task_tuple_list = unchecked_tasks(self.engine)
         task_dict = {}
         for task_tuple in task_tuple_list:
-            task_id, task = self._from_task_tuple_to_task(task_tuple)
+            task_id, task = self._from_task_tuple_to_task(task_tuple[0])
             task_dict[task_id] = task
 
         self.current_task_dict = task_dict
@@ -148,7 +148,7 @@ class Tasker:
 
         with Session(self.engine) as session:
             for subtask_name in subtasks:
-                subtask = Subtasks(name=subtask_name, parent_task_id=task.task_id)
+                subtask = Subtasks(name=subtask_name, parent_task_id=task.task_id, is_checked=False)
                 session.add(subtask)
 
             session.commit()
