@@ -356,11 +356,14 @@ class MainWindow(QMainWindow):
             self.new_subtask_button.setEnabled(False)
             self.delete_subtask_button.setEnabled(False)
             self.delete_task_button.setEnabled(False)
+            self.task_checkbox_button.setEnabled(False)
+            self.subtask_checkbox_button.setEnabled(False)
         else:
             self.new_subtask_button.setEnabled(True)
             self.delete_subtask_button.setEnabled(True)
             self.delete_task_button.setEnabled(True)
-
+            self.task_checkbox_button.setEnabled(True)
+            self.subtask_checkbox_button.setEnabled(True)
 
     def task_clicked(self):
         """displays the details of the selected task"""
@@ -395,13 +398,17 @@ class MainWindow(QMainWindow):
 
     def task_toggled(self):
         self.tasker.toggle_task(self.current_task.task_id)
-        self.current_task.is_checked = not self.current_task.is_checked
-        self.pull_task_list()
+        if self.current_task.is_checked:
+            self.task_state_label.setText(self.language_dict["true"])
+        else:
+            self.task_state_label.setText(self.language_dict["false"])
 
     def subtask_toggled(self):
         self.tasker.toggle_subtask(self.current_task.task_id, self.current_subtasks[self.subtask_list.currentRow()])
-        self.current_task.subtasks[self.current_subtasks[self.subtask_list.currentRow()]] = not self.current_task.subtasks[self.current_subtasks[self.subtask_list.currentRow()]]
-        self.pull_task_list()
+        if self.current_task.subtasks[self.current_subtasks[self.subtask_list.currentRow()]]:
+            self.subtask_state_label.setText(self.language_dict["true"])
+        else:
+            self.subtask_state_label.setText(self.language_dict["false"])
 
     def closeEvent(self, a0: QtGui.QCloseEvent):
         reply = QMessageBox.question(self, self.language_dict["quit_confirmation"], self.language_dict["are_you_sure_you_want_to_quit"],
