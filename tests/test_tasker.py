@@ -4,7 +4,7 @@ import pytest as pytest
 from program.Task import Task
 from program.Tasker import Tasker
 
-os.chdir("../program")
+os.chdir("..")
 
 
 def test_add_delete_category():

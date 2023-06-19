@@ -1,16 +1,9 @@
-from typing import Optional
-
-from PyQt5.QtWidgets import QApplication, QMainWindow, QLabel, QWidget, QHBoxLayout, QVBoxLayout, \
-    QPushButton, QLineEdit, QDateEdit, QComboBox, QRadioButton, QListWidget, QSizePolicy, QSpacerItem
-from PyQt5.QtGui import QPixmap, QIcon, QFont
-from PyQt5.QtCore import QRect, QSize, Qt
+from PyQt5.QtWidgets import QLabel, QWidget, QHBoxLayout, QVBoxLayout, \
+    QPushButton, QSizePolicy, QSpacerItem, QMessageBox
+from PyQt5.QtGui import QIcon
+from PyQt5.QtCore import QSize
 from PyQt5 import QtGui
-from pyqt_checkbox_list_widget.checkBoxListWidget import CheckBoxListWidget
 from program.language_options import language_options
-import sys
-from program.Settings import Settings
-from program.Tasker import Tasker
-from program.Task import Task
 import os
 from gui.cat_window import CatWindow
 from gui.add_task_window import AddTaskWindow
@@ -25,15 +18,13 @@ class ActionMenuWindow(QWidget):
         self.parent_widget = parent
         self.tasker = tasker
         self.settings = settings
+        self.language_setting = None
+        self.language_dict = {}
 
         # hide parent window
         self.parent_widget.hide()
 
-        # language settings
-        self.language_setting = self.settings.language_option
-        # self.language_setting = "silly"
-        self.language_dict = language_options[self.language_setting]
-        # TODO - to pewnie lepiej bedzie potem wyszczegolnic do funkcji
+        self.language_settings()
 
         # main window properties
         self.setWindowTitle(self.language_dict["action_menu_window_title"])
@@ -106,8 +97,8 @@ class ActionMenuWindow(QWidget):
         font.setBold(True)
         font.setPointSize(20)
         self.title_label.setFont(font)
-        self.add_task_label = QLabel(self.language_dict["add_tasks_window_title"])
         self.del_all_tasks_label = QLabel(self.language_dict["del_all_tasks_label"])
+        self.add_task_label = QLabel(self.language_dict["add_tasks_window_title"])
         self.cat_label = QLabel(self.language_dict["cat_label"])
         self.real_cat_label = QLabel(self.language_dict["real_cat_label"])
 
@@ -157,13 +148,27 @@ class ActionMenuWindow(QWidget):
         self.cats_button.clicked.connect(self.manage_categories_window_show)
         self.del_all_tasks_button.clicked.connect(self.delete_all_tasks)
 
+    def language_settings(self):
+        self.language_setting = self.settings.language_option
+        self.language_dict = language_options[self.language_setting]
+
+    def update_text(self):
+        self.setWindowTitle(self.language_dict["action_menu_window_title"])
+        self.back_button.setText(self.language_dict["back_button"])
+        self.title_label.setText(self.language_dict["action_menu_title"])
+        self.del_all_tasks_label.setText(self.language_dict["del_all_tasks_label"])
+        self.add_task_label.setText(self.language_dict["add_tasks_window_title"])
+        self.cat_label.setText(self.language_dict["cat_label"])
+        self.real_cat_label.setText(self.language_dict["real_cat_label"])
+
     def back_to_main_window(self):
         self.parent_widget.update_window()
         self.parent_widget.show()
         self.hide()
 
     def update_window(self):
-        print("action menu was updated")
+        self.language_settings()
+        self.update_text()
 
     def cat_window_show(self):
         self.cat_window = CatWindow(self, self.tasker, self.settings)
@@ -178,9 +183,14 @@ class ActionMenuWindow(QWidget):
         self.manage_categories_window.show()
 
     def delete_all_tasks(self):
-        pass
+        self.tasker.delete_all_checked_off()
+        self.msg_box = QMessageBox()
+        self.msg_box.setIcon(QMessageBox.Information)
+        self.msg_box.setText(self.language_dict["all_tasks_deleted_msg"])
+        self.msg_box.setWindowTitle(self.language_dict["all_tasks_deleted_title"])
+        self.msg_box.setStandardButtons(QMessageBox.Ok)
+        self.msg_box.exec()
 
     def closeEvent(self, a0: QtGui.QCloseEvent):
         self.back_to_main_window()
         a0.ignore()
-

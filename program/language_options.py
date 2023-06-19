@@ -62,10 +62,15 @@ eng_dict = {
     "are_you_sure_you_want_to_quit": "Are you sure you want to quit?",
     "task_checkbox_button": "change task state",
     "subtask_checkbox_button": "change subtask state",
-    "true": "done",
-    "false": "not done",
+    "true": "DONE",
+    "false": "NOT DONE",
     "zero_length_name_msg": "Name of the task is obligatory!",
-    "zero_length_name_title": "Alert!"
+    "zero_length_name_title": "Alert!",
+    "all_tasks_deleted_title": "Successful deletion",
+    "all_tasks_deleted_msg": "All checked-off task have been successfully deleted",
+    "zero_cat_length_name_msg": "Name of the category is obligatory!",
+    "zero_cat_length_name_title": "Alert!",
+    "invalid_time_windows": "Invalid priority level time windows!"
 }
 
 pol_dict = {
@@ -132,10 +137,15 @@ pol_dict = {
     "are_you_sure_you_want_to_quit": "Czy na pewno chcesz wyjść z aplikacji?",
     "task_checkbox_button": "zmień stan zadania",
     "subtask_checkbox_button": "zmień stan podzadania",
-    "true": "wykonane",
-    "false": "nie wykonane",
+    "true": "WYKONANE",
+    "false": "NIE WYKONANE",
     "zero_length_name_msg": "Nazwa jest obligatoryjna!",
-    "zero_length_name_title": "Uwaga!"
+    "zero_length_name_title": "Uwaga!",
+    "all_tasks_deleted_title": "Usuwanie zakończono powodzeniem",
+    "all_tasks_deleted_msg": "Wszystkie zadania oznaczone jako wykonane zostały pomyślnie usunięte",
+    "zero_cat_length_name_msg": "Nazwa kategorii jest obligatoryjna!",
+    "zero_cat_length_name_title": "Uwaga!",
+    "invalid_time_windows": "Nieprawidłowe przedziały czasu dla poziomów priorytetu!"
 }
 
 silly_dict = {
@@ -202,10 +212,15 @@ silly_dict = {
     "are_you_sure_you_want_to_quit": "Już nas opuszczasz?",
     "task_checkbox_button": "zmień stan questa",
     "subtask_checkbox_button": "zmień stan sidequesta",
-    "true": "odwalone",
-    "false": "nie odwalone",
+    "true": "ODWALONE",
+    "false": "NIE ODWALONE",
     "zero_length_name_msg": "Nazwa questa jest atrybutem obligatoryjnym! (Hanna Mazur kręci głową z rozczarowaniem)",
-    "zero_length_name_title": "Zoinks!"
+    "zero_length_name_title": "Zoinks!",
+    "all_tasks_deleted_title": "Porządki zrobione",
+    "all_tasks_deleted_msg": "Sweep swoop! Wszystkie odwalone questy wywalono z bazy.",
+    "zero_cat_length_name_msg": "Nazwa kategorii jest atrybutem obligatoryjnym! (Hanna Mazur kręci głową z rozczarowaniem)",
+    "zero_cat_length_name_title": "Zoinks!",
+    "invalid_time_windows": "Ej ale wiesz, że nie możesz dać większego okienka czasowego dla słabszego prioritetu niż dla mocniejszego, nie?"
 }
 
 language_options = {

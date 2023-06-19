@@ -180,7 +180,7 @@ class Tasker:
 
         with Session(self.engine) as session:
             for task in to_del:
-                session.delete(task)
+                session.delete(task[0])
             session.commit()
 
     def delete_subtask(self, task_id, subtask_name):
@@ -240,7 +240,8 @@ class Tasker:
 
     def delete_category(self, cat_name):
         """Delete category if there aren't any tasks with it. Return True if succeeded, False otherwise"""
-        if len(by_category(cat_name, self.engine)) == 0:
+        cat_id = get_category_id(cat_name, self.engine)[0]
+        if len(by_category(cat_id, self.engine)) == 0:
             query = delete(Categories).where(Categories.name == cat_name)
 
             with self.engine.begin() as conn:

@@ -1,13 +1,11 @@
 from typing import Optional
 
-from PyQt5.QtWidgets import QApplication, QMainWindow, QLabel, QWidget, QHBoxLayout, QVBoxLayout, \
+from PyQt5.QtWidgets import QLabel, QWidget, QHBoxLayout, QVBoxLayout, \
     QPushButton, QLineEdit, QDateEdit, QComboBox, QRadioButton, QListWidget, QSizePolicy, QSpacerItem, QMessageBox
-from PyQt5.QtGui import QPixmap, QIcon, QFont
-from PyQt5.QtCore import QRect, QSize, Qt, QDate
+from PyQt5.QtGui import QPixmap
+from PyQt5.QtCore import QDate
 from PyQt5 import QtGui
-from pyqt_checkbox_list_widget.checkBoxListWidget import CheckBoxListWidget
 from program.language_options import language_options
-import sys
 from program.Settings import Settings
 from program.Tasker import Tasker
 from program.Task import Task
@@ -110,7 +108,7 @@ class AddTaskWindow(QWidget):
         self.category_combo_box.addItems(self.categories_list)
 
         # spacer
-        self.spacer = QSpacerItem(100, 1, QSizePolicy.Minimum, QSizePolicy.Expanding)
+        self.spacer = QSpacerItem(30, 1, QSizePolicy.Minimum, QSizePolicy.Expanding)
 
         # arrange main window
         self.self_layout = QHBoxLayout()
@@ -209,7 +207,6 @@ class AddTaskWindow(QWidget):
             self.subtask_list.clear()
             self.subtask_list.addItems(list(self.added_subtasks_dict.keys()))
 
-
     def back_to_main_window(self):
         self.parent_widget.update_window()
         self.parent_widget.show()
@@ -231,6 +228,7 @@ class AddTaskWindow(QWidget):
         name = self.name_field.text()
         if name == "":
             self.msg_box = QMessageBox()
+            self.msg_box.setIcon(QMessageBox.Warning)
             self.msg_box.setText(self.language_dict["zero_length_name_msg"])
             self.msg_box.setWindowTitle(self.language_dict["zero_length_name_title"])
             self.msg_box.setStandardButtons(QMessageBox.Ok)
@@ -264,7 +262,8 @@ class AddTaskWindow(QWidget):
                 res = self.msg_box.exec()
                 if res == QMessageBox.Yes:
                     print("creating shopping task")
-                    # create_shopping_task(self.tasker,self.name_field.text(),)
+                    create_shopping_task(tasker=self.tasker,parent_task_name=name,cat=cat,
+                                         exec_date=exec_date, deadline=deadline, url=prompt)
             self.back_to_main_window()
 
     def delete_subtask(self):

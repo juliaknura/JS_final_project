@@ -1,9 +1,7 @@
-from PyQt5.QtWidgets import QApplication, QMainWindow, QLabel, QWidget, QHBoxLayout, QVBoxLayout, \
-    QPushButton, QLineEdit, QDateEdit, QComboBox, QRadioButton, QListWidget, QSizePolicy, QSpacerItem, QMessageBox
-from PyQt5.QtGui import QPixmap, QIcon, QFont
-from PyQt5.QtCore import QRect, QSize, Qt
+from PyQt5.QtWidgets import QLabel, QWidget, QHBoxLayout, QVBoxLayout, \
+    QPushButton, QLineEdit, QSizePolicy, QSpacerItem, QMessageBox
+from PyQt5.QtCore import Qt
 from PyQt5 import QtGui
-from pyqt_checkbox_list_widget.checkBoxListWidget import CheckBoxListWidget
 from program.language_options import language_options
 from program.Tasker import Tasker
 
@@ -100,6 +98,7 @@ class AddSubtaskWindow(QWidget):
             self.msg_box = QMessageBox()
             self.msg_box.setText(self.language_dict["zero_length_name_msg"])
             self.msg_box.setWindowTitle(self.language_dict["zero_length_name_title"])
+            self.msg_box.setIcon(QMessageBox.Warning)
             self.msg_box.setStandardButtons(QMessageBox.Ok)
             self.msg_box.exec()
         else:
@@ -113,7 +112,6 @@ class AddSubtaskWindow(QWidget):
                 self.msg_box.exec()
             else:
                 self.back_to_main_window()
-
 
     def language_settings(self):
         self.language_setting = self.settings.language_option

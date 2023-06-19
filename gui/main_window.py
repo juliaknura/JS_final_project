@@ -1,13 +1,11 @@
 from typing import List
 
 from PyQt5.QtWidgets import QMainWindow, QLabel, QWidget, QHBoxLayout, QVBoxLayout, \
-    QPushButton, QLineEdit, QDateEdit, QMessageBox, QCheckBox, QListWidget
-from PyQt5.QtGui import QPixmap, QIcon
-from PyQt5.QtCore import QRect, QSize, Qt, QDate
+    QPushButton, QLineEdit, QDateEdit, QMessageBox, QListWidget
+from PyQt5.QtGui import QPixmap, QIcon, QColorConstants
+from PyQt5.QtCore import QRect, QSize, Qt
 from PyQt5 import QtGui
-from pyqt_checkbox_list_widget.checkBoxListWidget import CheckBoxListWidget
 from program.language_options import language_options
-import sys
 from program.Settings import Settings
 from program.Tasker import Tasker
 from program.Task import Task
@@ -52,7 +50,9 @@ class MainWindow(QMainWindow):
         self.logo_widget = QWidget()
         self.options_widget = QWidget()
         self.top_options_widget = QWidget()
+        self.top_options_widget.setFixedSize(410,90)
         self.bottom_options_widget = QWidget()
+        self.bottom_options_widget.setFixedSize(420,90)
         self.central_widget = QWidget()
         self.central_content_widget = QWidget()
         self.central_title_widget = QWidget()
@@ -84,8 +84,10 @@ class MainWindow(QMainWindow):
 
         # checkbox replacement
         self.task_checkbox_button = QPushButton()
+        self.task_checkbox_button.setFixedSize(200,27)
         self.task_checkbox_button.setText(self.language_dict["task_checkbox_button"])
         self.subtask_checkbox_button = QPushButton()
+        self.subtask_checkbox_button.setFixedSize(200,27)
         self.subtask_checkbox_button.setText(self.language_dict["subtask_checkbox_button"])
 
         # text labels
@@ -100,8 +102,6 @@ class MainWindow(QMainWindow):
         font.setBold(True)
         font.setPointSize(20)
         self.daily_title_label.setFont(font)
-        # self.none_label = QLabel(self.language_dict["none_label"])
-        # self.none_label2 = QLabel(self.language_dict["none_label"])
         self.none_label = QLabel("")
         self.none_label2 = QLabel("")
         self.task_state_label = QLabel(self.language_dict["false"])
@@ -122,7 +122,7 @@ class MainWindow(QMainWindow):
         self.action_menu_button.setFixedSize(180, 80)
         self.all_tasks_button = QPushButton()
         self.all_tasks_button.setText(self.language_dict["all_tasks_button"])
-        self.all_tasks_button.setFixedSize(360, 80)
+        self.all_tasks_button.setFixedSize(375, 80)
         self.settings_button = QPushButton()
         self.settings_button.setIcon(QIcon(os.getcwd()+os.sep+"gui"+os.sep+"settings.png"))
         self.settings_button.setIconSize(QSize(70, 70))
@@ -212,8 +212,8 @@ class MainWindow(QMainWindow):
         self.detail_widget.setLayout(self.detail_layout)
 
         # arrange task details widget
-        self.task_details_layout.addWidget(self.task_state_label)
-        self.task_details_layout.addWidget(self.task_checkbox_button)
+        self.task_details_layout.addWidget(self.task_state_label, alignment=Qt.AlignCenter)
+        self.task_details_layout.addWidget(self.task_checkbox_button, alignment=Qt.AlignCenter)
         self.task_details_layout.addWidget(self.task_name_label)
         self.task_details_layout.addWidget(self.name_field)
         self.task_details_layout.addWidget(self.task_cat_label)
@@ -226,8 +226,8 @@ class MainWindow(QMainWindow):
         self.task_details_layout.addWidget(self.exec_date_widget)
         self.task_details_layout.addWidget(self.subtasks_label)
         self.task_details_layout.addWidget(self.subtask_list)
-        self.task_details_layout.addWidget(self.subtask_state_label)
-        self.task_details_layout.addWidget(self.subtask_checkbox_button)
+        self.task_details_layout.addWidget(self.subtask_state_label, alignment=Qt.AlignCenter)
+        self.task_details_layout.addWidget(self.subtask_checkbox_button, alignment=Qt.AlignCenter)
         self.task_details_widget.setLayout(self.task_details_layout)
 
         # arrange deadline widget
@@ -318,7 +318,6 @@ class MainWindow(QMainWindow):
         self.task_state_label.setText(self.language_dict["false"])
         self.subtask_state_label.setText(self.language_dict["false"])
 
-
     def update_window(self):
         """updates the info after coming back to this window"""
         self.update_settings()
@@ -383,6 +382,10 @@ class MainWindow(QMainWindow):
         self.subtask_list.addItems(self.current_subtasks)
         self.subtask_state_label.setText(self.language_dict["false"])
 
+        for i in range(len(self.current_subtasks)):
+            if self.current_task.subtasks[self.current_subtasks[i]]:
+                self.subtask_list.item(i).setBackground(QColorConstants.LightGray)
+
     def subtask_clicked(self):
         """sets the state of the subtask checkbox in accordance with the current state of the subtask"""
         self.subtask_checkbox_button.setEnabled(True)
@@ -398,16 +401,20 @@ class MainWindow(QMainWindow):
         self.tasker.toggle_task(self.current_task.task_id)
         if self.current_task.is_checked:
             self.task_state_label.setText(self.language_dict["true"])
+            self.task_list.currentItem().setBackground(QColorConstants.LightGray)
         else:
             self.task_state_label.setText(self.language_dict["false"])
+            self.task_list.currentItem().setBackground(QColorConstants.White)
 
     def subtask_toggled(self):
         """toggles the subtask in database and in the current list"""
         self.tasker.toggle_subtask(self.current_task.task_id, self.current_subtasks[self.subtask_list.currentRow()])
         if self.current_task.subtasks[self.current_subtasks[self.subtask_list.currentRow()]]:
             self.subtask_state_label.setText(self.language_dict["true"])
+            self.subtask_list.currentItem().setBackground(QColorConstants.LightGray)
         else:
             self.subtask_state_label.setText(self.language_dict["false"])
+            self.subtask_list.currentItem().setBackground(QColorConstants.White)
 
     def enable_buttons(self, state):
         self.new_subtask_button.setEnabled(state)

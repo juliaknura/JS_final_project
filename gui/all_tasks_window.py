@@ -1,15 +1,11 @@
 from typing import List
 
-from PyQt5.QtWidgets import QApplication, QMainWindow, QLabel, QWidget, QHBoxLayout, QVBoxLayout, \
+from PyQt5.QtWidgets import QLabel, QWidget, QHBoxLayout, QVBoxLayout, \
     QPushButton, QLineEdit, QDateEdit, QTabWidget, QListWidget
-from PyQt5.QtGui import QPixmap, QIcon, QFont
-from PyQt5.QtCore import QRect, QSize, Qt
+from PyQt5.QtGui import QIcon, QColorConstants
+from PyQt5.QtCore import QSize, Qt
 from PyQt5 import QtGui
-from pyqt_checkbox_list_widget.checkBoxListWidget import CheckBoxListWidget
 from program.language_options import language_options
-import sys
-from program.Settings import Settings
-from program.Tasker import Tasker
 from program.Task import Task
 import os
 from gui.checked_tasks_window import CheckedTasksWindow
@@ -110,8 +106,10 @@ class AllTasksWindow(QWidget):
 
         # checkbox replacement
         self.task_checkbox_button = QPushButton()
+        self.task_checkbox_button.setFixedSize(200, 27)
         self.task_checkbox_button.setText(self.language_dict["task_checkbox_button"])
         self.subtask_checkbox_button = QPushButton()
+        self.subtask_checkbox_button.setFixedSize(200, 27)
         self.subtask_checkbox_button.setText(self.language_dict["subtask_checkbox_button"])
 
         # buttons
@@ -160,9 +158,6 @@ class AllTasksWindow(QWidget):
         self.task_deadline_label = QLabel(self.language_dict["task_deadline_label"])
         self.task_exec_date_label = QLabel(self.language_dict["task_exec_date_label"])
         self.subtasks_label = QLabel(self.language_dict["subtasks_label"])
-
-        # self.none_label = QLabel(self.language_dict["none_label"])
-        # self.none_label2 = QLabel(self.language_dict["none_label"])
         self.none_label = QLabel("")
         self.none_label2 = QLabel("")
 
@@ -217,8 +212,8 @@ class AllTasksWindow(QWidget):
         self.detail_layout.addWidget(self.task_actions_widget)
 
         # arrange task det widget
-        self.task_details_layout.addWidget(self.task_state_label)
-        self.task_details_layout.addWidget(self.task_checkbox_button)
+        self.task_details_layout.addWidget(self.task_state_label, alignment=Qt.AlignCenter)
+        self.task_details_layout.addWidget(self.task_checkbox_button, alignment=Qt.AlignCenter)
         self.task_details_layout.addWidget(self.task_name_label)
         self.task_details_layout.addWidget(self.name_field)
         self.task_details_layout.addWidget(self.task_desc_label)
@@ -229,8 +224,8 @@ class AllTasksWindow(QWidget):
         self.task_details_layout.addWidget(self.exec_date_widget)
         self.task_details_layout.addWidget(self.subtasks_label)
         self.task_details_layout.addWidget(self.subtask_list)
-        self.task_details_layout.addWidget(self.subtask_state_label)
-        self.task_details_layout.addWidget(self.subtask_checkbox_button)
+        self.task_details_layout.addWidget(self.subtask_state_label, alignment=Qt.AlignCenter)
+        self.task_details_layout.addWidget(self.subtask_checkbox_button, alignment=Qt.AlignCenter)
 
         # arrange deadline widget
         self.deadline_layout.addWidget(self.deadline_field)
@@ -346,6 +341,10 @@ class AllTasksWindow(QWidget):
         self.subtask_list.addItems(self.current_subtasks)
         self.subtask_state_label.setText(self.language_dict["false"])
 
+        for i in range(len(self.current_subtasks)):
+            if self.current_task.subtasks[self.current_subtasks[i]]:
+                self.subtask_list.item(i).setBackground(QColorConstants.LightGray)
+
     def subtask_clicked(self):
         """sets the state of the subtask checkbox in accordance with the current state of the subtask"""
         self.subtask_checkbox_button.setEnabled(True)
@@ -361,16 +360,20 @@ class AllTasksWindow(QWidget):
         self.tasker.toggle_task(self.current_task.task_id)
         if self.current_task.is_checked:
             self.task_state_label.setText(self.language_dict["true"])
+            self.task_list.currentItem().setBackground(QColorConstants.LightGray)
         else:
             self.task_state_label.setText(self.language_dict["false"])
+            self.task_list.currentItem().setBackground(QColorConstants.White)
 
     def subtask_toggled(self):
         """toggles the subtask in database and in the current list"""
         self.tasker.toggle_subtask(self.current_task.task_id, self.current_subtasks[self.subtask_list.currentRow()])
         if self.current_task.subtasks[self.current_subtasks[self.subtask_list.currentRow()]]:
             self.subtask_state_label.setText(self.language_dict["true"])
+            self.subtask_list.currentItem().setBackground(QColorConstants.LightGray)
         else:
             self.subtask_state_label.setText(self.language_dict["false"])
+            self.subtask_list.currentItem().setBackground(QColorConstants.White)
 
     def enable_buttons(self, state):
         self.new_subtask_button.setEnabled(state)
@@ -395,7 +398,18 @@ class AllTasksWindow(QWidget):
         """updates the info after coming back to this window"""
         self.update_settings()
         self.update_text()
+        self.categories = self.get_category_list()
+        self.update_tabs()
         self.pull_task_list()
+
+    def update_tabs(self):
+        number_of_tabs = len(self.categories)
+        placeholders = []
+        for _ in range(number_of_tabs):
+            placeholders.append(QLabel())
+        self.tabs.clear()
+        for i in range(number_of_tabs):
+            self.tabs.addTab(placeholders[i], self.categories[i])
 
     def checked_tasks_window_show(self):
         self.checked_tasks_window = CheckedTasksWindow(self, self.tasker, self.settings)
@@ -406,7 +420,7 @@ class AllTasksWindow(QWidget):
         self.add_task_window.show()
 
     def add_subtask_window_show(self):
-        self.add_subtask_window = AddSubtaskWindow(self, self.tasker, self.settings)
+        self.add_subtask_window = AddSubtaskWindow(self, self.tasker, self.settings, self.current_task.task_id)
         self.add_subtask_window.show()
 
     def action_menu_window_show(self):
