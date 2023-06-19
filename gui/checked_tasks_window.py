@@ -1,13 +1,11 @@
 from typing import List
 
-from PyQt5.QtWidgets import QApplication, QMainWindow, QLabel, QWidget, QHBoxLayout, QVBoxLayout, \
+from PyQt5.QtWidgets import QLabel, QWidget, QHBoxLayout, QVBoxLayout, \
     QPushButton, QLineEdit, QDateEdit, QSpacerItem, QSizePolicy, QListWidget
-from PyQt5.QtGui import QPixmap, QIcon, QFont
-from PyQt5.QtCore import QRect, QSize, Qt, QDate
+from PyQt5.QtGui import QIcon, QColorConstants
+from PyQt5.QtCore import QSize, Qt, QDate
 from PyQt5 import QtGui
-from pyqt_checkbox_list_widget.checkBoxListWidget import CheckBoxListWidget
 from program.language_options import language_options
-import sys
 from program.Settings import Settings
 from program.Tasker import Tasker
 from program.Task import Task
@@ -40,8 +38,6 @@ class CheckedTasksWindow(QWidget):
         self.language_dict = {}
 
         self.update_settings()
-
-
 
         # hide parent window
         self.parent_widget.hide()
@@ -130,8 +126,10 @@ class CheckedTasksWindow(QWidget):
 
         # checkbox replacement
         self.task_checkbox_button = QPushButton()
+        self.task_checkbox_button.setFixedSize(200, 27)
         self.task_checkbox_button.setText(self.language_dict["task_checkbox_button"])
         self.subtask_checkbox_button = QPushButton()
+        self.subtask_checkbox_button.setFixedSize(200, 27)
         self.subtask_checkbox_button.setText(self.language_dict["subtask_checkbox_button"])
 
         # text_fields
@@ -162,9 +160,6 @@ class CheckedTasksWindow(QWidget):
         self.subtasks_label = QLabel(self.language_dict["subtasks_label"])
         self.date_label = QLabel(self.language_dict["date_label"])
         self.task_cat_label = QLabel(self.language_dict["task_cat_label"])
-
-        # self.none_label = QLabel(self.language_dict["none_label"])
-        # self.none_label2 = QLabel(self.language_dict["none_label"])
         self.none_label = QLabel("")
         self.none_label2 = QLabel("")
 
@@ -211,8 +206,8 @@ class CheckedTasksWindow(QWidget):
         self.detail_layout.addWidget(self.task_actions_widget)
 
         # arrange task det widget
-        self.task_details_layout.addWidget(self.task_state_label)
-        self.task_details_layout.addWidget(self.task_checkbox_button)
+        self.task_details_layout.addWidget(self.task_state_label, alignment=Qt.AlignCenter)
+        self.task_details_layout.addWidget(self.task_checkbox_button, alignment=Qt.AlignCenter)
         self.task_details_layout.addWidget(self.task_name_label)
         self.task_details_layout.addWidget(self.name_field)
         self.task_details_layout.addWidget(self.task_cat_label)
@@ -225,8 +220,8 @@ class CheckedTasksWindow(QWidget):
         self.task_details_layout.addWidget(self.exec_date_widget)
         self.task_details_layout.addWidget(self.subtasks_label)
         self.task_details_layout.addWidget(self.subtask_list)
-        self.task_details_layout.addWidget(self.subtask_state_label)
-        self.task_details_layout.addWidget(self.subtask_checkbox_button)
+        self.task_details_layout.addWidget(self.subtask_state_label, alignment=Qt.AlignCenter)
+        self.task_details_layout.addWidget(self.subtask_checkbox_button, alignment=Qt.AlignCenter)
 
         # arrange deadline widget
         self.deadline_layout.addWidget(self.deadline_field)
@@ -285,7 +280,7 @@ class CheckedTasksWindow(QWidget):
     def pull_task_list(self, chosen_date):
         # pull task list
         self.tasker.get_by_checked_off_date(chosen_date)
-        self.current_task_list = self.tasker.get_current_list()
+        self.current_task_list: List[Task] = self.tasker.get_current_list()
         self.current_task = None
         self.current_subtasks = []
         self.current_task_name_list = []
@@ -303,6 +298,10 @@ class CheckedTasksWindow(QWidget):
 
         # enabling buttons
         self.set_buttons_state(False)
+
+        for i in range(len(self.current_task_list)):
+            if self.current_task_list[i].is_checked:
+                self.task_list.item(i).setBackground(QColorConstants.LightGray)
 
     def task_clicked(self):
         """displays the details of the selected task"""
@@ -330,6 +329,10 @@ class CheckedTasksWindow(QWidget):
         self.subtask_list.addItems(self.current_subtasks)
         self.subtask_state_label.setText(self.language_dict["false"])
 
+        for i in range(len(self.current_subtasks)):
+            if self.current_task.subtasks[self.current_subtasks[i]]:
+                self.subtask_list.item(i).setBackground(QColorConstants.LightGray)
+
     def subtask_clicked(self):
         """sets the state of the subtask checkbox in accordance with the current state of the subtask"""
         self.subtask_checkbox_button.setEnabled(True)
@@ -346,16 +349,20 @@ class CheckedTasksWindow(QWidget):
         self.tasker.toggle_task(self.current_task.task_id)
         if self.current_task.is_checked:
             self.task_state_label.setText(self.language_dict["true"])
+            self.task_list.currentItem().setBackground(QColorConstants.LightGray)
         else:
             self.task_state_label.setText(self.language_dict["false"])
+            self.task_list.currentItem().setBackground(QColorConstants.White)
 
     def subtask_toggled(self):
         """toggles the subtask in database and in the current list"""
         self.tasker.toggle_subtask(self.current_task.task_id, self.current_subtasks[self.subtask_list.currentRow()])
         if self.current_task.subtasks[self.current_subtasks[self.subtask_list.currentRow()]]:
             self.subtask_state_label.setText(self.language_dict["true"])
+            self.subtask_list.currentItem().setBackground(QColorConstants.LightGray)
         else:
             self.subtask_state_label.setText(self.language_dict["false"])
+            self.subtask_list.currentItem().setBackground(QColorConstants.White)
 
     def back_to_main_window(self):
         self.parent_widget.update_window()
@@ -377,7 +384,6 @@ class CheckedTasksWindow(QWidget):
     def choose_as_template(self):
         self.add_task_window = AddTaskWindow(self,self.tasker, self.settings, self.current_task)
         self.add_task_window.show()
-
 
     def choose_date(self):
         chosen_date = datetime(year=self.date_field.date().year(), month=self.date_field.date().month(), day=self.date_field.date().day())

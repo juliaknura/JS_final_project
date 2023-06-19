@@ -1,9 +1,7 @@
-from PyQt5.QtWidgets import QApplication, QMainWindow, QLabel, QWidget, QHBoxLayout, QVBoxLayout, \
-    QPushButton, QLineEdit, QDateEdit, QComboBox, QRadioButton, QListWidget, QSizePolicy, QSpacerItem, QMessageBox
-from PyQt5.QtGui import QPixmap, QIcon, QFont
-from PyQt5.QtCore import QRect, QSize, Qt
+from PyQt5.QtWidgets import QLabel, QWidget, QHBoxLayout, QVBoxLayout, \
+    QPushButton, QLineEdit, QSizePolicy, QSpacerItem, QMessageBox
+from PyQt5.QtCore import Qt
 from PyQt5 import QtGui
-from pyqt_checkbox_list_widget.checkBoxListWidget import CheckBoxListWidget
 from program.language_options import language_options
 
 
@@ -19,11 +17,7 @@ class AddCategoryWindow(QWidget):
         # hide parent window
         self.parent_widget.hide()
 
-        # language settings
-        self.language_setting = self.settings.language_option
-        # self.language_setting = "silly"
-        self.language_dict = language_options[self.language_setting]
-        # TODO - to pewnie lepiej bedzie potem wyszczegolnic do funkcji
+        self.language_settings()
 
         # main window properties
         self.setWindowTitle(self.language_dict["add_category_button"])
@@ -94,13 +88,30 @@ class AddCategoryWindow(QWidget):
         self.parent_widget.show()
         self.hide()
 
+    def language_settings(self):
+        self.language_setting = self.settings.language_option
+        self.language_dict = language_options[self.language_setting]
+
     def add_category(self):
-        self.msg_box = QMessageBox()
-        self.msg_box.setText(self.language_dict["invalid_category_msg_box_text"])
-        self.msg_box.setWindowTitle(self.language_dict["invalid_category_msg_box_title"])
-        self.msg_box.setStandardButtons(QMessageBox.Ok)
-        self.msg_box.setIcon(QMessageBox.Warning)
-        self.msg_box.exec()
+        cat_name = self.category_name_field.text()
+        if cat_name == "":
+            self.msg_box = QMessageBox()
+            self.msg_box.setText(self.language_dict["zero_cat_length_name_msg"])
+            self.msg_box.setWindowTitle(self.language_dict["zero_cat_length_name_title"])
+            self.msg_box.setIcon(QMessageBox.Warning)
+            self.msg_box.setStandardButtons(QMessageBox.Ok)
+            self.msg_box.exec()
+        else:
+            successful = self.tasker.add_category(cat_name)
+            if not successful:
+                self.msg_box = QMessageBox()
+                self.msg_box.setText(self.language_dict["invalid_category_msg_box_text"])
+                self.msg_box.setWindowTitle(self.language_dict["invalid_category_msg_box_title"])
+                self.msg_box.setStandardButtons(QMessageBox.Ok)
+                self.msg_box.setIcon(QMessageBox.Warning)
+                self.msg_box.exec()
+            else:
+                self.back_to_main_window()
 
     def closeEvent(self, a0: QtGui.QCloseEvent):
         self.back_to_main_window()

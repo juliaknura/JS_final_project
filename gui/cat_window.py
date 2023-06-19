@@ -1,15 +1,10 @@
-from PyQt5.QtWidgets import QApplication, QMainWindow, QLabel, QWidget, QHBoxLayout, QVBoxLayout, \
-    QPushButton, QLineEdit, QDateEdit, QComboBox, QRadioButton, QListWidget, QSizePolicy, QSpacerItem
-from PyQt5.QtGui import QPixmap, QIcon, QFont
-from PyQt5.QtCore import QRect, QSize, Qt
+from PyQt5.QtWidgets import QLabel, QWidget, QHBoxLayout, QVBoxLayout, QPushButton
+from PyQt5.QtGui import QPixmap
+from PyQt5.QtCore import QRect, Qt
 from PyQt5 import QtGui
-from pyqt_checkbox_list_widget.checkBoxListWidget import CheckBoxListWidget
 from program.language_options import language_options
-import sys
-from program.Settings import Settings
-from program.Tasker import Tasker
-from program.Task import Task
 import os
+
 
 class CatWindow(QWidget):
 
@@ -26,9 +21,7 @@ class CatWindow(QWidget):
 
         # language settings
         self.language_setting = self.settings.language_option
-        # self.language_setting = "silly"
         self.language_dict = language_options[self.language_setting]
-        # TODO - to pewnie lepiej bedzie potem wyszczegolnic do funkcji
 
         # main window properties
         self.setWindowTitle(self.language_dict["real_cat_label"])

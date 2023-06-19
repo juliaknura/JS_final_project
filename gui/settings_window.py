@@ -1,38 +1,46 @@
-from PyQt5.QtWidgets import QApplication, QMainWindow, QLabel, QWidget, QHBoxLayout, QVBoxLayout, \
-    QPushButton, QLineEdit, QDateEdit, QComboBox, QRadioButton, QListWidget, QSizePolicy, QSpacerItem, QSpinBox
-from PyQt5.QtGui import QPixmap, QIcon, QFont
-from PyQt5.QtCore import QRect, QSize, Qt
+from PyQt5.QtWidgets import QLabel, QWidget, QHBoxLayout, QVBoxLayout, \
+    QPushButton, QComboBox, QSizePolicy, QSpacerItem, QSpinBox, QMessageBox
+from PyQt5.QtCore import Qt
 from PyQt5 import QtGui
-from pyqt_checkbox_list_widget.checkBoxListWidget import CheckBoxListWidget
 from program.language_options import language_options
+from program.Settings import Settings
 
 
 class SettingsWindow(QWidget):
 
-    def __init__(self, parent, tasker, settings):
+    def __init__(self, parent, tasker, settings: Settings):
         super().__init__()
 
         self.parent_widget = parent
         self.tasker = tasker
         self.settings = settings
+        self.stop_ignore = False
+        self.language_setting = None
+        self.language_dict = {}
 
         # hide parent window
         self.parent_widget.hide()
-
-        # language settings
-        self.language_setting = self.settings.language_option
-        # self.language_setting = "silly"
-        self.language_dict = language_options[self.language_setting]
-        # TODO - to pewnie lepiej bedzie potem wyszczegolnic do funkcji
+        self.language_settings()
 
         self.language_options = [self.language_dict["english"], self.language_dict["polish"],
                                  self.language_dict["silly"]]
         self.priority_levels = [self.language_dict["high"], self.language_dict["medium"], self.language_dict["low"]]
 
+        self.language_standard_names = {
+            self.language_dict["english"]: "english",
+            self.language_dict["polish"]: "polish",
+            self.language_dict["silly"]: "silly"
+        }
+
+        self.priority_standard_names = {
+            self.language_dict["high"]: 0,
+            self.language_dict["medium"]: 1,
+            self.language_dict["low"]: 2
+        }
+
         # main window properties
         self.setWindowTitle(self.language_dict["settings_window_title"])
         self.setGeometry(100, 100, 500, 400)
-
 
         # widget
         self.main_widget = QWidget()
@@ -106,10 +114,15 @@ class SettingsWindow(QWidget):
         # spin boxes
         self.high_spin_box = QSpinBox()
         self.high_spin_box.setMinimum(1)
+        self.high_spin_box.setValue(self.settings.priority_dict[0])
         self.med_spin_box = QSpinBox()
         self.med_spin_box.setMinimum(1)
+        self.med_spin_box.setValue(self.settings.priority_dict[1])
         self.low_spin_box = QSpinBox()
         self.low_spin_box.setMinimum(1)
+        self.low_spin_box.setValue(self.settings.priority_dict[2])
+
+        self.stop_ignore = True
 
         # spacer
         self.spacer = QSpacerItem(80, 1, QSizePolicy.Minimum, QSizePolicy.Expanding)
@@ -169,8 +182,69 @@ class SettingsWindow(QWidget):
         self.parent_widget.show()
         self.hide()
 
+    def language_settings(self):
+        self.language_setting = self.settings.language_option
+        self.language_dict = language_options[self.language_setting]
+
+    def update_text(self):
+        self.language_options = [self.language_dict["english"], self.language_dict["polish"],
+                                 self.language_dict["silly"]]
+        self.priority_levels = [self.language_dict["high"], self.language_dict["medium"], self.language_dict["low"]]
+
+        self.language_standard_names = {
+            self.language_dict["english"]: "english",
+            self.language_dict["polish"]: "polish",
+            self.language_dict["silly"]: "silly"
+        }
+
+        self.priority_standard_names = {
+            self.language_dict["high"]: 0,
+            self.language_dict["medium"]: 1,
+            self.language_dict["low"]: 2
+        }
+
+        self.setWindowTitle(self.language_dict["settings_window_title"])
+        self.title_label.setText(self.language_dict["settings_title"])
+        self.choose_language_option_label.setText(self.language_dict["choose_language_option_label"])
+        self.choose_pr_lvl_time_windows_label.setText(self.language_dict["choose_pr_lvl_time_windows_label"])
+        self.high_lvl_label.setText(self.language_dict["high_lvl_label"])
+        self.med_lvl_label.setText(self.language_dict["med_lvl_label"])
+        self.low_lvl_label.setText(self.language_dict["low_lvl_label"])
+        self.choose_pr_lvl_daily_label.setText(self.language_dict["choose_pr_lvl_daily_label"])
+
+        self.language_combo_box.clear()
+        self.language_combo_box.addItems(self.language_options)
+
+        self.priority_combo_box.clear()
+        self.priority_combo_box.addItems(self.priority_levels)
+
+        self.high_spin_box.setValue(self.settings.priority_dict[0])
+        self.med_spin_box.setValue(self.settings.priority_dict[1])
+        self.low_spin_box.setValue(self.settings.priority_dict[2])
+
+    def update_window(self):
+        self.language_settings()
+        self.update_text()
+
     def save_settings(self):
-        ...
+        lang_version = self.language_standard_names[self.language_combo_box.currentText()]
+        high_priority_lvl = self.high_spin_box.value()
+        med_priority_lvl = self.med_spin_box.value()
+        low_priority_lvl = self.low_spin_box.value()
+        daily_pr_lev = self.priority_standard_names[self.priority_combo_box.currentText()]
+
+        if high_priority_lvl < med_priority_lvl < low_priority_lvl:
+            self.settings.change_language_option(lang_version)
+            self.settings.change_priority_lvl_settings(high_priority_lvl, med_priority_lvl, low_priority_lvl)
+            self.settings.change_daily_list_priority_level_setting(daily_pr_lev)
+            self.update_window()
+        else:
+            self.msg_box = QMessageBox()
+            self.msg_box.setText(self.language_dict["invalid_time_windows"])
+            self.msg_box.setWindowTitle(self.language_dict["zero_cat_length_name_title"])
+            self.msg_box.setStandardButtons(QMessageBox.Ok)
+            self.msg_box.setIcon(QMessageBox.Warning)
+            self.msg_box.exec()
 
     def closeEvent(self, a0: QtGui.QCloseEvent):
         self.back_to_main_window()
