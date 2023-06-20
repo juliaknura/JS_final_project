@@ -68,11 +68,7 @@ def get_ing_list(request):
 
 def create_shopping_task(tasker, parent_task_name, cat, exec_date, deadline, url):
     """
-    Returns a task with ingredients for the recipe as subtasks
-    :param tasker: object of Tasker class
-    :param parent_task_name: name of parent task
-    :param url: link to the recipe
-    :return: None
+    Returns a task with ingredients for the recipe as subtasks.
     """
     recipe_name = find_recipe_name(parent_task_name)
     task_name = f"Zakupy na {recipe_name}"

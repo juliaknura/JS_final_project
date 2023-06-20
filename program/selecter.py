@@ -38,6 +38,14 @@ def by_category(cat_id, engine):
     return ans
 
 
+def by_category_all(cat_id, engine):
+    """Returns a list of all tasks with given category"""
+    with Session(engine) as session:
+        query = select(Tasks).where(Tasks.cat_id == cat_id)
+        ans = session.execute(query).all()
+    return ans
+
+
 def by_ddl(deadline: datetime, engine):
     """Returns a list of unchecked tasks with given deadline"""
     with Session(engine) as session:
@@ -84,4 +92,3 @@ def get_subtasks(task_id, engine):
         query = select(Subtasks.name, Subtasks.is_checked).where(Subtasks.parent_task_id == task_id)
         ans = session.execute(query).all()
     return ans
-

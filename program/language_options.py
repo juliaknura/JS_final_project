@@ -174,7 +174,7 @@ silly_dict = {
     "none_button": "po co to komu",
     "action_menu_window_title": "Funky akcje",
     "action_menu_title": "FUNKY AKCJE",
-    "del_all_tasks_label": "Abort wszystkie odwalone sidequesty",
+    "del_all_tasks_label": "Abort wszystkie odwalone questy",
     "cat_label": "Weź ogarnij te kategorie",
     "real_cat_label": "*inhales* KOT",
     "add_category_button": "Dawaj nową",

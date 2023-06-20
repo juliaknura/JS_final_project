@@ -4,7 +4,8 @@ from sqlalchemy.orm import Session
 
 from program import ania_mode
 from program.selecter import by_ddl, by_category, by_checked_off_date, by_exec_date, \
-    get_category_name, get_category_list, get_category_id, unchecked_tasks, get_subtasks, checked_off_tasks
+    get_category_name, get_category_list, get_category_id, unchecked_tasks, get_subtasks, checked_off_tasks, \
+    by_category_all
 from sqlalchemy import create_engine, update, delete
 from datetime import datetime, timedelta
 from program.db_tables import Tasks, Subtasks, Categories
@@ -241,7 +242,7 @@ class Tasker:
     def delete_category(self, cat_name):
         """Delete category if there aren't any tasks with it. Return True if succeeded, False otherwise"""
         cat_id = get_category_id(cat_name, self.engine)[0]
-        if len(by_category(cat_id, self.engine)) == 0:
+        if len(by_category_all(cat_id, self.engine)) == 0:
             query = delete(Categories).where(Categories.name == cat_name)
 
             with self.engine.begin() as conn:
