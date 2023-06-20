@@ -98,7 +98,9 @@ class AddTaskWindow(QWidget):
         self.name_field = QLineEdit()
         self.desc_field = QLineEdit()
         self.deadline_field = QDateEdit()
+        self.deadline_field.setDate(QDate.currentDate())
         self.exec_date_field = QDateEdit()
+        self.exec_date_field.setDate(QDate.currentDate())
 
         # checkbox lists
         self.subtask_list = QListWidget()
