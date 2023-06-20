@@ -7,7 +7,7 @@ from program.Settings import Settings
 
 
 def create_database(db_name):
-    engine = create_engine(db_name, echo=True)  # TODO silence
+    engine = create_engine(db_name, echo=False)
     Base.metadata.create_all(engine)
 
 

@@ -18,8 +18,7 @@ class Tasker:
 
     def __init__(self, priorities_dict, daily_list_prior_lvl):
         self.current_task_dict = None
-        self.engine = create_engine(db, echo=True)
-        # TODO na razie niech bedzie verbose zeby ogladac co sie dzieje, potem to zmienimy
+        self.engine = create_engine(db, echo=False)
         self.priority_dict = priorities_dict
         # A dictionary with default priority level settings:
         # level 0 - urgent
@@ -197,7 +196,7 @@ class Tasker:
     def toggle_task(self, task_id):
         """Changes the state of a chosen, stored task and updates database"""
         task = self.current_task_dict[task_id]
-        task.toggle()  # TODO pointer or copy??
+        task.toggle()
         query = (update(Tasks)
                  .where(Tasks.task_id == task_id)
                  .values(is_checked=task.is_checked, checked_off_date=task.checked_off_date))
@@ -208,7 +207,7 @@ class Tasker:
     def toggle_subtask(self, task_id, subtask_name):
         """Changes the state of a chosen, stored subtask and updates database"""
         task = self.current_task_dict[task_id]
-        task.toggle_subtask(subtask_name)  # TODO as above
+        task.toggle_subtask(subtask_name)
         query = (update(Subtasks)
                  .where(Subtasks.parent_task_id == task_id)
                  .where(Subtasks.name == subtask_name)
