@@ -267,10 +267,11 @@ class AddTaskWindow(QWidget):
             self.back_to_main_window()
 
     def delete_subtask(self):
-        subtask = self.subtask_list.currentItem().text()
-        self.added_subtasks_dict.pop(subtask)
-        self.subtask_list.clear()
-        self.subtask_list.addItems(list(self.added_subtasks_dict.keys()))
+        if len(self.added_subtasks_dict) > 0:
+            subtask = self.subtask_list.currentItem().text()
+            self.added_subtasks_dict.pop(subtask)
+            self.subtask_list.clear()
+            self.subtask_list.addItems(list(self.added_subtasks_dict.keys()))
 
     def closeEvent(self, a0: QtGui.QCloseEvent):
         self.back_to_main_window()
