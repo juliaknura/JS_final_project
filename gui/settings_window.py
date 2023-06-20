@@ -108,8 +108,12 @@ class SettingsWindow(QWidget):
         self.language_combo_box = QComboBox()
         self.language_combo_box.addItems(self.language_options)
 
+        self.language_combo_box.setCurrentIndex(self.index_of_language_option(self.settings.language_option))
+
         self.priority_combo_box = QComboBox()
         self.priority_combo_box.addItems(self.priority_levels)
+
+        self.priority_combo_box.setCurrentIndex(self.index_of_daily_pr(self.settings.daily_list_priority_lvl))
 
         # spin boxes
         self.high_spin_box = QSpinBox()
@@ -214,9 +218,11 @@ class SettingsWindow(QWidget):
 
         self.language_combo_box.clear()
         self.language_combo_box.addItems(self.language_options)
+        self.language_combo_box.setCurrentIndex(self.index_of_language_option(self.settings.language_option))
 
         self.priority_combo_box.clear()
         self.priority_combo_box.addItems(self.priority_levels)
+        self.priority_combo_box.setCurrentIndex(self.index_of_daily_pr(self.settings.daily_list_priority_lvl))
 
         self.high_spin_box.setValue(self.settings.priority_dict[0])
         self.med_spin_box.setValue(self.settings.priority_dict[1])
@@ -225,6 +231,20 @@ class SettingsWindow(QWidget):
     def update_window(self):
         self.language_settings()
         self.update_text()
+
+    def index_of_language_option(self, l_op):
+        for i in range(len(self.language_options)):
+            if self.language_standard_names[self.language_options[i]] == l_op:
+                return i
+        return 0
+
+
+    def index_of_daily_pr(self, daily_pr_lvl):
+        for i in range(len(self.priority_levels)):
+            if self.priority_standard_names[self.priority_levels[i]] == daily_pr_lvl:
+                return i
+        return 0
+
 
     def save_settings(self):
         lang_version = self.language_standard_names[self.language_combo_box.currentText()]
