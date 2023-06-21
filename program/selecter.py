@@ -49,7 +49,7 @@ def by_category_all(cat_id, engine):
 def by_ddl(deadline: datetime, engine):
     """Returns a list of unchecked tasks with given deadline"""
     with Session(engine) as session:
-        query = select(Tasks).where(Tasks.deadline == deadline).where(Tasks.is_checked == False)
+        query = select(Tasks).where(Tasks.deadline <= deadline).where(Tasks.is_checked == False)
         ans = session.execute(query).all()
     return ans
 
