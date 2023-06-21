@@ -70,7 +70,9 @@ eng_dict = {
     "all_tasks_deleted_msg": "All checked-off task have been successfully deleted",
     "zero_cat_length_name_msg": "Name of the category is obligatory!",
     "zero_cat_length_name_title": "Alert!",
-    "invalid_time_windows": "Invalid priority level time windows!"
+    "invalid_time_windows": "Invalid priority level time windows!",
+    "settings_saved_msg": "All settings were saved!",
+    "settings_saved_title": "Saved successfully"
 }
 
 pol_dict = {
@@ -145,7 +147,9 @@ pol_dict = {
     "all_tasks_deleted_msg": "Wszystkie zadania oznaczone jako wykonane zostały pomyślnie usunięte",
     "zero_cat_length_name_msg": "Nazwa kategorii jest obligatoryjna!",
     "zero_cat_length_name_title": "Uwaga!",
-    "invalid_time_windows": "Nieprawidłowe przedziały czasu dla poziomów priorytetu!"
+    "invalid_time_windows": "Nieprawidłowe przedziały czasu dla poziomów priorytetu!",
+    "settings_saved_msg": "Wszystkie ustawienia zostały zapisane!",
+    "settings_saved_title": "Pomyślnie zapisano"
 }
 
 silly_dict = {
@@ -220,7 +224,9 @@ silly_dict = {
     "all_tasks_deleted_msg": "Sweep swoop! Wszystkie odwalone questy wywalono z bazy.",
     "zero_cat_length_name_msg": "Nazwa kategorii jest atrybutem obligatoryjnym! (Hanna Mazur kręci głową z rozczarowaniem)",
     "zero_cat_length_name_title": "Zoinks!",
-    "invalid_time_windows": "Ej ale wiesz, że nie możesz dać większego okienka czasowego dla słabszego prioritetu niż dla mocniejszego, nie?"
+    "invalid_time_windows": "Ej ale wiesz, że nie możesz dać większego okienka czasowego dla słabszego prioritetu niż dla mocniejszego, nie?",
+    "settings_saved_msg": "Bangla! Ustawienia zapisane",
+    "settings_saved_title": "No pięknie"
 }
 
 language_options = {

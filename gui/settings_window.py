@@ -257,7 +257,15 @@ class SettingsWindow(QWidget):
             self.settings.change_language_option(lang_version)
             self.settings.change_priority_lvl_settings(high_priority_lvl, med_priority_lvl, low_priority_lvl)
             self.settings.change_daily_list_priority_level_setting(daily_pr_lev)
+            self.tasker.daily_list_priority_lvl = self.settings.daily_list_priority_lvl
+            self.tasker.priority_dict = self.settings.priority_dict
             self.update_window()
+            self.msg_box = QMessageBox()
+            self.msg_box.setIcon(QMessageBox.Information)
+            self.msg_box.setText(self.language_dict["settings_saved_msg"])
+            self.msg_box.setWindowTitle(self.language_dict["settings_saved_title"])
+            self.msg_box.setStandardButtons(QMessageBox.Ok)
+            self.msg_box.exec()
         else:
             self.msg_box = QMessageBox()
             self.msg_box.setText(self.language_dict["invalid_time_windows"])
